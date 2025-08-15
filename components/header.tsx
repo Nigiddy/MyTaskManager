@@ -1,21 +1,13 @@
 "use client"
 
-import { Bell, ChevronDown, Menu, Search, Target, TrendingUp } from "lucide-react"
+import { Bell, ChevronDown, Search, Target, TrendingUp } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
-interface HeaderProps {
-  onMenuClick: () => void
-}
-
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header() {
   return (
     <header className="bg-[#FFF8F3] border-b border-[#FFE8D6] h-16 flex items-center px-4 shadow-sm">
-      <Button variant="ghost" size="icon" className="md:hidden mr-2" onClick={onMenuClick}>
-        <Menu size={20} />
-      </Button>
-
       <div className="relative flex-1 max-w-md">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#999]" size={18} />
         <Input

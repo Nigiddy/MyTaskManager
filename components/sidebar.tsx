@@ -1,131 +1,172 @@
 "use client"
 
-import type React from "react"
-import Link from "next/link"
-import {
-  LayoutDashboard,
-  Activity,
-  BarChart2,
-  Briefcase,
-  CheckSquare,
-  Library,
-  Bookmark,
-  Settings,
-  LogOut,
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { 
+  Home, 
+  CheckSquare, 
+  Zap, 
+  BarChart3, 
+  Heart, 
+  Database,
+  Menu,
   X,
-  Code,
-  TrendingUp,
-  Dumbbell,
-  Palette,
-  MessageSquare,
-  Target,
-  Users,
+  ChevronRight
 } from "lucide-react"
-import { cn } from "@/lib/utils"
 
 interface SidebarProps {
-  open: boolean
-  setOpen: (open: boolean) => void
+  currentPage: string
+  onPageChange: (page: string) => void
+  sidebarOpen: boolean
+  setSidebarOpen: (open: boolean) => void
 }
 
-export function Sidebar({ open, setOpen }: SidebarProps) {
-  return (
-    <div
-      className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-[#FFF8F3] shadow-md transition-transform duration-300 ease-in-out md:relative md:translate-x-0",
-        open ? "translate-x-0" : "-translate-x-full",
-      )}
-    >
-      <div className="flex h-16 items-center justify-between px-4 border-b border-[#FFE8D6]">
-        <h1 className="text-xl font-bold text-[#333]">Task Master</h1>
-        <button className="md:hidden rounded-full p-1 hover:bg-[#FFE8D6]" onClick={() => setOpen(false)}>
-          <X size={20} />
-        </button>
-      </div>
+const navigationItems = [
+  {
+    id: 'home',
+    label: 'Home',
+    icon: Home,
+    description: 'Daily overview and quick actions',
+    color: 'from-blue-500 to-indigo-500'
+  },
+  {
+    id: 'tasks',
+    label: 'Tasks & Projects',
+    icon: CheckSquare,
+    description: 'Manage tasks, projects, and calendar',
+    color: 'from-green-500 to-emerald-500'
+  },
+  {
+    id: 'productivity',
+    label: 'Productivity',
+    icon: Zap,
+    description: 'Pomodoro timer, habits, and focus tools',
+    color: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'analytics',
+    label: 'Analytics',
+    icon: BarChart3,
+    description: 'Performance metrics and insights',
+    color: 'from-indigo-500 to-blue-500'
+  },
+  {
+    id: 'life',
+    label: 'Life & Wellness',
+    icon: Heart,
+    description: 'Wellness tracking and life balance',
+    color: 'from-pink-500 to-rose-500'
+  },
+  {
+    id: 'data',
+    label: 'Data Input',
+    icon: Database,
+    description: 'Log activities and track progress',
+    color: 'from-amber-500 to-orange-500'
+  }
+]
 
-      <div className="px-4 py-6">
-        <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Daily Grind</p>
-        <nav className="space-y-1">
-          <SidebarItem href="/" icon={LayoutDashboard} text="Dashboard" active />
-          <SidebarItem href="/coding" icon={Code} text="Coding Sessions" />
-          <SidebarItem href="/fitness" icon={Dumbbell} text="Fitness & Wellness" />
-          <SidebarItem href="/business" icon={Briefcase} text="Business Strategy" />
-          <SidebarItem href="/trading" icon={TrendingUp} text="Trading Review" />
-          <SidebarItem href="/design" icon={Palette} text="Design Work" />
+export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen }: SidebarProps) {
+  return (
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-[#FFE8D6] shadow-lg
+        transform transition-transform duration-300 ease-in-out
+        lg:relative lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-[#FFE8D6]">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#FF9F43] to-[#FF6B6B] rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">TM</span>
+            </div>
+            <div>
+              <h1 className="font-bold text-lg text-[#333]">Task Master</h1>
+              <p className="text-xs text-[#666]">Your Command Center</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon
+            const isActive = currentPage === item.id
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  onPageChange(item.id)
+                  setSidebarOpen(false) // Close sidebar on mobile after selection
+                }}
+                className={`
+                  w-full p-3 rounded-lg text-left transition-all duration-200
+                  ${isActive 
+                    ? `bg-gradient-to-r ${item.color} text-white shadow-md` 
+                    : 'hover:bg-gray-50 text-[#333] hover:shadow-sm'
+                  }
+                `}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-[#666]'}`} />
+                    <div>
+                      <div className={`font-medium ${isActive ? 'text-white' : 'text-[#333]'}`}>
+                        {item.label}
+                      </div>
+                      <div className={`text-xs ${isActive ? 'text-white/80' : 'text-[#666]'}`}>
+                        {item.description}
+                      </div>
+                    </div>
+                  </div>
+                  {isActive && (
+                    <ChevronRight className="h-4 w-4 text-white" />
+                  )}
+                </div>
+              </button>
+            )
+          })}
         </nav>
 
-        <div className="mt-8">
-          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Business Focus</p>
-          <nav className="space-y-1">
-            <SidebarItem href="/dem-man" icon={Target} text="Dem Man Brand" />
-            <SidebarItem href="/dicla" icon={Users} text="Dicla Clothing" />
-            <SidebarItem href="/outreach" icon={MessageSquare} text="Client Outreach" />
-            <SidebarItem href="/projects" icon={Library} text="Personal Projects" />
-          </nav>
-        </div>
-
-        <div className="mt-8">
-          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Analytics</p>
-          <nav className="space-y-1">
-            <SidebarItem href="/activity" icon={Activity} text="Activity Tracker" />
-            <SidebarItem href="/statistic" icon={BarChart2} text="Performance Stats" />
-            <SidebarItem href="/tasks" icon={CheckSquare} text="Task History" badge={12} />
-          </nav>
-        </div>
-
-        <div className="mt-8">
-          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Quick Actions</p>
-          <div className="space-y-3">
-            <QuickAction name="Add New Task" action="+" />
-            <QuickAction name="Start Coding Session" action="▶" />
-            <QuickAction name="Log Workout" action="💪" />
+        {/* Footer */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#FFE8D6] bg-gray-50">
+          <div className="text-center">
+            <div className="text-xs text-[#666] mb-2">Current Page</div>
+            <div className="text-sm font-medium text-[#333] capitalize">
+              {currentPage.replace('-', ' ')}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 w-full border-t border-[#FFE8D6] p-4">
-        <nav className="space-y-1">
-          <SidebarItem href="/settings" icon={Settings} text="Settings" />
-          <SidebarItem href="/logout" icon={LogOut} text="Logout" />
-        </nav>
-      </div>
-    </div>
-  )
-}
-
-interface SidebarItemProps {
-  href: string
-  icon: React.ElementType
-  text: string
-  active?: boolean
-  badge?: number
-}
-
-function SidebarItem({ href, icon: Icon, text, active, badge }: SidebarItemProps) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors",
-        active ? "bg-[#FFE8D6] text-[#333]" : "text-[#666] hover:bg-[#FFE8D6] hover:text-[#333]",
-      )}
-    >
-      <Icon size={20} className="mr-3" />
-      <span>{text}</span>
-      {badge && (
-        <span className="ml-auto bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
-          {badge}
-        </span>
-      )}
-    </Link>
-  )
-}
-
-function QuickAction({ name, action }: { name: string; action: string }) {
-  return (
-    <div className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#FFE8D6] hover:border-[#FF9F43] transition-colors cursor-pointer">
-      <span className="text-sm text-[#666]">{name}</span>
-      <span className="text-lg font-bold text-[#FF9F43]">{action}</span>
-    </div>
+      {/* Mobile Toggle Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-4 left-4 z-30 lg:hidden bg-white border border-[#FFE8D6] shadow-md"
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+    </>
   )
 }

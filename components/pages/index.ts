@@ -1,0 +1,6 @@
+export { HomePage } from './home-page'
+export { TasksPage } from './tasks-page'
+export { ProductivityPage } from './productivity-page'
+export { AnalyticsPage } from './analytics-page'
+export { LifePage } from './life-page'
+export { DataPage } from './data-page'
