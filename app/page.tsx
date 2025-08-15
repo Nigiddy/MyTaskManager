@@ -1,5 +1,5 @@
-import { Dashboard } from "@/components/dashboard"
-import { AmbientMessages } from "@/components/ambient-messages"
+import { Dashboard } from '@/components/dashboard';
+import { AmbientMessages } from '@/components/ambient-messages';
 
 export default function Home() {
   return (
@@ -7,5 +7,5 @@ export default function Home() {
       <Dashboard />
       <AmbientMessages />
     </>
-  )
+  );
 }

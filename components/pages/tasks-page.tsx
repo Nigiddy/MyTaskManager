@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
-import { TaskList } from "@/components/task-list"
-import { Calendar } from "@/components/calendar"
-import { MyTasks } from "@/components/my-tasks"
-import { AssignedTasks } from "@/components/assigned-tasks"
-import { CaseTypeBreakdown } from "@/components/case-type-breakdown"
+import { TaskList } from '@/components/task-list';
+import { Calendar } from '@/components/calendar';
+import { MyTasks } from '@/components/my-tasks';
+import { AssignedTasks } from '@/components/assigned-tasks';
+import { CaseTypeBreakdown } from '@/components/case-type-breakdown';
 
 export function TasksPage() {
   return (
@@ -12,7 +12,9 @@ export function TasksPage() {
       {/* Page Header */}
       <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-green-800 mb-2">Tasks & Projects</h2>
+          <h2 className="text-2xl font-bold text-green-800 mb-2">
+            Tasks & Projects
+          </h2>
           <p className="text-sm text-green-600">
             Manage your daily tasks, track project progress, and stay organized
           </p>
@@ -69,5 +71,5 @@ export function TasksPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

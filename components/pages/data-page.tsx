@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { DataInput } from "@/components/data-input"
+import { DataInput } from '@/components/data-input';
 
 export function DataPage() {
   return (
@@ -8,7 +8,9 @@ export function DataPage() {
       {/* Page Header */}
       <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-amber-800 mb-2">Data Input & Tracking</h2>
+          <h2 className="text-2xl font-bold text-amber-800 mb-2">
+            Data Input & Tracking
+          </h2>
           <p className="text-sm text-amber-600">
             Log your activities, track progress, and maintain detailed records
           </p>
@@ -73,7 +75,9 @@ export function DataPage() {
 
       {/* Recent Activity Summary */}
       <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
-        <h3 className="font-semibold text-emerald-800 mb-3">📊 Recent Activity Summary</h3>
+        <h3 className="font-semibold text-emerald-800 mb-3">
+          📊 Recent Activity Summary
+        </h3>
         <div className="space-y-2 text-sm text-emerald-700">
           <div className="flex justify-between">
             <span>• Coding Sessions</span>
@@ -110,5 +114,5 @@ export function DataPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

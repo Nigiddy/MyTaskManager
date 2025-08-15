@@ -1,45 +1,45 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PageTransitionProps {
-  children: React.ReactNode
-  currentPage: string
+  children: React.ReactNode;
+  currentPage: string;
 }
 
 const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,
-    scale: 0.98
+    scale: 0.98,
   },
   in: {
     opacity: 1,
     y: 0,
-    scale: 1
+    scale: 1,
   },
   out: {
     opacity: 0,
     y: -20,
-    scale: 0.98
-  }
-}
+    scale: 0.98,
+  },
+};
 
 const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.3
-}
+  type: 'tween' as const,
+  ease: 'anticipate' as const,
+  duration: 0.3,
+};
 
 export function PageTransition({ children, currentPage }: PageTransitionProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true)
-    const timer = setTimeout(() => setIsLoading(false), 100)
-    return () => clearTimeout(timer)
-  }, [currentPage])
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 100);
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
   return (
     <AnimatePresence mode="wait">
@@ -61,5 +61,5 @@ export function PageTransition({ children, currentPage }: PageTransitionProps) {
         )}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }

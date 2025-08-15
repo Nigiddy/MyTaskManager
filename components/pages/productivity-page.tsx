@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { PomodoroTimer } from "@/components/pomodoro-timer"
-import { HabitStreaks } from "@/components/habit-streaks"
-import { MicroWins } from "@/components/micro-wins"
-import { QuickActions } from "@/components/quick-actions"
+import { PomodoroTimer } from '@/components/pomodoro-timer';
+import { HabitStreaks } from '@/components/habit-streaks';
+import { MicroWins } from '@/components/micro-wins';
+import { QuickActions } from '@/components/quick-actions';
 
 export function ProductivityPage() {
   return (
@@ -11,7 +11,9 @@ export function ProductivityPage() {
       {/* Page Header */}
       <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-purple-800 mb-2">Productivity Tools</h2>
+          <h2 className="text-2xl font-bold text-purple-800 mb-2">
+            Productivity Tools
+          </h2>
           <p className="text-sm text-purple-600">
             Focus, build habits, and track your daily wins
           </p>
@@ -32,7 +34,9 @@ export function ProductivityPage() {
 
       {/* Productivity Insights */}
       <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
-        <h3 className="font-semibold text-[#333] mb-3">Today's Productivity Insights</h3>
+        <h3 className="font-semibold text-[#333] mb-3">
+          Today's Productivity Insights
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">4</div>
@@ -55,7 +59,9 @@ export function ProductivityPage() {
 
       {/* Productivity Tips */}
       <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-        <h3 className="font-semibold text-blue-800 mb-3">💡 Productivity Tips</h3>
+        <h3 className="font-semibold text-blue-800 mb-3">
+          💡 Productivity Tips
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-blue-700">
           <div>• Use Pomodoro technique for focused work sessions</div>
           <div>• Track micro-wins to build momentum</div>
@@ -83,5 +89,5 @@ export function ProductivityPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

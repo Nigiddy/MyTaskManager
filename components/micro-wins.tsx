@@ -1,94 +1,134 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Trophy, Plus, Star, Target, Zap, Heart, Brain } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { useState } from 'react';
+import { Trophy, Plus, Star, Target, Zap, Heart, Brain } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 type MicroWin = {
-  id: number
-  title: string
-  description: string
-  category: string
-  impact: "low" | "medium" | "high"
-  completedAt: Date
-  tags: string[]
-}
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  impact: 'low' | 'medium' | 'high';
+  completedAt: Date;
+  tags: string[];
+};
 
 const defaultWins: MicroWin[] = [
   {
     id: 1,
-    title: "Did 20 push-ups between code sessions",
-    description: "Stayed active and energized during long coding hours",
-    category: "fitness",
-    impact: "medium",
+    title: 'Did 20 push-ups between code sessions',
+    description: 'Stayed active and energized during long coding hours',
+    category: 'fitness',
+    impact: 'medium',
     completedAt: new Date(),
-    tags: ["fitness", "discipline", "energy"]
+    tags: ['fitness', 'discipline', 'energy'],
   },
   {
     id: 2,
     title: "Didn't touch social media till lunch",
-    description: "Maintained focus and productivity in the morning",
-    category: "discipline",
-    impact: "high",
+    description: 'Maintained focus and productivity in the morning',
+    category: 'discipline',
+    impact: 'high',
     completedAt: new Date(),
-    tags: ["focus", "productivity", "self-control"]
+    tags: ['focus', 'productivity', 'self-control'],
   },
   {
     id: 3,
-    title: "Drank 8 glasses of water today",
-    description: "Stayed hydrated throughout the day",
-    category: "health",
-    impact: "medium",
+    title: 'Drank 8 glasses of water today',
+    description: 'Stayed hydrated throughout the day',
+    category: 'health',
+    impact: 'medium',
     completedAt: new Date(),
-    tags: ["health", "hydration", "wellness"]
+    tags: ['health', 'hydration', 'wellness'],
   },
   {
     id: 4,
-    title: "Called Mum and had a great chat",
-    description: "Maintained important relationships",
-    category: "relationships",
-    impact: "high",
+    title: 'Called Mum and had a great chat',
+    description: 'Maintained important relationships',
+    category: 'relationships',
+    impact: 'high',
     completedAt: new Date(),
-    tags: ["family", "connection", "balance"]
-  }
-]
+    tags: ['family', 'connection', 'balance'],
+  },
+];
 
 const categories = [
-  { id: "fitness", name: "Fitness", icon: Target, color: "text-green-600 bg-green-50 border-green-200" },
-  { id: "discipline", name: "Discipline", icon: Zap, color: "text-blue-600 bg-blue-50 border-blue-200" },
-  { id: "health", name: "Health", icon: Heart, color: "text-pink-600 bg-pink-50 border-pink-200" },
-  { id: "relationships", name: "Relationships", icon: Heart, color: "text-purple-600 bg-purple-50 border-purple-200" },
-  { id: "learning", name: "Learning", icon: Brain, color: "text-orange-600 bg-orange-50 border-orange-200" },
-  { id: "creativity", name: "Creativity", icon: Star, color: "text-yellow-600 bg-yellow-50 border-yellow-200" }
-]
+  {
+    id: 'fitness',
+    name: 'Fitness',
+    icon: Target,
+    color: 'text-green-600 bg-green-50 border-green-200',
+  },
+  {
+    id: 'discipline',
+    name: 'Discipline',
+    icon: Zap,
+    color: 'text-blue-600 bg-blue-50 border-blue-200',
+  },
+  {
+    id: 'health',
+    name: 'Health',
+    icon: Heart,
+    color: 'text-pink-600 bg-pink-50 border-pink-200',
+  },
+  {
+    id: 'relationships',
+    name: 'Relationships',
+    icon: Heart,
+    color: 'text-purple-600 bg-purple-50 border-purple-200',
+  },
+  {
+    id: 'learning',
+    name: 'Learning',
+    icon: Brain,
+    color: 'text-orange-600 bg-orange-50 border-orange-200',
+  },
+  {
+    id: 'creativity',
+    name: 'Creativity',
+    icon: Star,
+    color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+  },
+];
 
 export function MicroWins() {
-  const [wins, setWins] = useState<MicroWin[]>(defaultWins)
-  const [newWin, setNewWin] = useState("")
-  const [newDescription, setNewDescription] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("discipline")
-  const [selectedImpact, setSelectedImpact] = useState<"low" | "medium" | "high">("medium")
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [wins, setWins] = useState<MicroWin[]>(defaultWins);
+  const [newWin, setNewWin] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('discipline');
+  const [selectedImpact, setSelectedImpact] = useState<
+    'low' | 'medium' | 'high'
+  >('medium');
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
-      case "high": return "text-red-600 bg-red-50 border-red-200"
-      case "medium": return "text-orange-600 bg-orange-50 border-orange-200"
-      case "low": return "text-green-600 bg-green-50 border-green-200"
-      default: return "text-gray-600 bg-gray-50 border-gray-200"
+      case 'high':
+        return 'text-red-600 bg-red-50 border-red-200';
+      case 'medium':
+        return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'low':
+        return 'text-green-600 bg-green-50 border-green-200';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200';
     }
-  }
+  };
 
   const getImpactIcon = (impact: string) => {
     switch (impact) {
-      case "high": return "🔥"
-      case "medium": return "⚡"
-      case "low": return "💡"
-      default: return "✨"
+      case 'high':
+        return '🔥';
+      case 'medium':
+        return '⚡';
+      case 'low':
+        return '💡';
+      default:
+        return '✨';
     }
-  }
+  };
 
   const addWin = () => {
     if (newWin.trim() && newDescription.trim()) {
@@ -99,43 +139,47 @@ export function MicroWins() {
         category: selectedCategory,
         impact: selectedImpact,
         completedAt: new Date(),
-        tags: [selectedCategory, selectedImpact]
-      }
-      setWins([win, ...wins])
-      setNewWin("")
-      setNewDescription("")
-      setShowAddForm(false)
+        tags: [selectedCategory, selectedImpact],
+      };
+      setWins([win, ...wins]);
+      setNewWin('');
+      setNewDescription('');
+      setShowAddForm(false);
     }
-  }
+  };
 
   const deleteWin = (id: number) => {
-    setWins(wins.filter(w => w.id !== id))
-  }
+    setWins(wins.filter(w => w.id !== id));
+  };
 
   const getCategoryIcon = (categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId)
-    return category ? category.icon : Target
-  }
+    const category = categories.find(c => c.id === categoryId);
+    return category ? category.icon : Target;
+  };
 
   const getCategoryColor = (categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId)
-    return category ? category.color : "text-gray-600 bg-gray-50 border-gray-200"
-  }
+    const category = categories.find(c => c.id === categoryId);
+    return category
+      ? category.color
+      : 'text-gray-600 bg-gray-50 border-gray-200';
+  };
 
-  const totalWins = wins.length
-  const highImpactWins = wins.filter(w => w.impact === "high").length
+  const totalWins = wins.length;
+  const highImpactWins = wins.filter(w => w.impact === 'high').length;
   const todayWins = wins.filter(w => {
-    const today = new Date()
-    const winDate = new Date(w.completedAt)
-    return winDate.toDateString() === today.toDateString()
-  }).length
+    const today = new Date();
+    const winDate = new Date(w.completedAt);
+    return winDate.toDateString() === today.toDateString();
+  }).length;
 
   return (
     <div className="bg-gradient-to-br from-[#FFF8F3] to-[#FFE8D6] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-[#FFE8D6]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Trophy size={20} className="text-yellow-500" />
-          <h2 className="font-semibold text-lg text-[#333]">MICRO-WINS TRACKER</h2>
+          <h2 className="font-semibold text-lg text-[#333]">
+            MICRO-WINS TRACKER
+          </h2>
         </div>
         <Button
           variant="ghost"
@@ -170,20 +214,20 @@ export function MicroWins() {
           <div className="space-y-3">
             <Input
               value={newWin}
-              onChange={(e) => setNewWin(e.target.value)}
+              onChange={e => setNewWin(e.target.value)}
               placeholder="What's your micro-win?"
               className="text-sm"
             />
             <Input
               value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
+              onChange={e => setNewDescription(e.target.value)}
               placeholder="Describe why this matters..."
               className="text-sm"
             />
             <div className="flex space-x-2">
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={e => setSelectedCategory(e.target.value)}
                 className="flex-1 px-3 py-2 text-sm border border-[#FFE8D6] rounded-md bg-white text-[#333]"
               >
                 {categories.map(category => (
@@ -194,7 +238,9 @@ export function MicroWins() {
               </select>
               <select
                 value={selectedImpact}
-                onChange={(e) => setSelectedImpact(e.target.value as "low" | "medium" | "high")}
+                onChange={e =>
+                  setSelectedImpact(e.target.value as 'low' | 'medium' | 'high')
+                }
                 className="flex-1 px-3 py-2 text-sm border border-[#FFE8D6] rounded-md bg-white text-[#333]"
               >
                 <option value="low">Low Impact</option>
@@ -226,8 +272,8 @@ export function MicroWins() {
 
       {/* Wins List */}
       <div className="space-y-3">
-        {wins.map((win) => {
-          const IconComponent = getCategoryIcon(win.category)
+        {wins.map(win => {
+          const IconComponent = getCategoryIcon(win.category);
           return (
             <div
               key={win.id}
@@ -237,29 +283,40 @@ export function MicroWins() {
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
                     <span className="text-lg">{getImpactIcon(win.impact)}</span>
-                    <h4 className="text-sm font-medium text-[#333]">{win.title}</h4>
+                    <h4 className="text-sm font-medium text-[#333]">
+                      {win.title}
+                    </h4>
                   </div>
-                  
+
                   <div className="text-xs text-[#666] mb-3">
                     {win.description}
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(win.category)}`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(win.category)}`}
+                    >
                       <IconComponent size={12} className="mr-1" />
                       {categories.find(c => c.id === win.category)?.name}
                     </span>
-                    
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getImpactColor(win.impact)}`}>
-                      {win.impact.charAt(0).toUpperCase() + win.impact.slice(1)} Impact
+
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getImpactColor(win.impact)}`}
+                    >
+                      {win.impact.charAt(0).toUpperCase() + win.impact.slice(1)}{' '}
+                      Impact
                     </span>
                   </div>
-                  
+
                   <div className="text-xs text-[#666] mt-2">
-                    {win.completedAt.toLocaleDateString()} at {win.completedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {win.completedAt.toLocaleDateString()} at{' '}
+                    {win.completedAt.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => deleteWin(win.id)}
                   className="ml-2 text-gray-400 hover:text-red-500 transition-colors p-1"
@@ -268,30 +325,32 @@ export function MicroWins() {
                 </button>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
       {/* Quick Add Suggestions */}
       <div className="mt-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-        <div className="text-xs text-yellow-700 mb-2 font-medium">Quick Win Ideas:</div>
+        <div className="text-xs text-yellow-700 mb-2 font-medium">
+          Quick Win Ideas:
+        </div>
         <div className="flex flex-wrap gap-2">
           {[
-            "Did 10 squats",
-            "Read 5 pages",
-            "Called a friend",
-            "Meditated 5 min",
-            "Drank water",
-            "Went outside"
+            'Did 10 squats',
+            'Read 5 pages',
+            'Called a friend',
+            'Meditated 5 min',
+            'Drank water',
+            'Went outside',
           ].map((suggestion, index) => (
             <button
               key={index}
               onClick={() => {
-                setNewWin(suggestion)
-                setNewDescription(`Quick win: ${suggestion.toLowerCase()}`)
-                setSelectedCategory("discipline")
-                setSelectedImpact("low")
-                setShowAddForm(true)
+                setNewWin(suggestion);
+                setNewDescription(`Quick win: ${suggestion.toLowerCase()}`);
+                setSelectedCategory('discipline');
+                setSelectedImpact('low');
+                setShowAddForm(true);
               }}
               className="text-xs px-2 py-1 bg-white rounded border border-yellow-200 text-yellow-700 hover:bg-yellow-50 transition-colors"
             >
@@ -301,5 +360,5 @@ export function MicroWins() {
         </div>
       </div>
     </div>
-  )
+  );
 }

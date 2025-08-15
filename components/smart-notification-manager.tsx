@@ -1,118 +1,125 @@
-"use client"
+'use client';
 
-import { useState, useEffect, useCallback, useRef } from "react"
-import { Bell, Clock, Play, Pause, Settings } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ScheduleLogic, scheduleUtils } from "./schedule-logic"
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Bell, Clock, Play, Pause, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ScheduleLogic, scheduleUtils } from './schedule-logic';
 
 interface LifeReminder {
-  id: string
-  text: string
-  category: string
-  priority: 'low' | 'medium' | 'high'
+  id: string;
+  text: string;
+  category: string;
+  priority: 'low' | 'medium' | 'high';
+  createdAt: Date;
 }
 
 interface SmartNotificationManagerProps {
-  reminders: LifeReminder[]
-  onNotificationSent?: (reminder: LifeReminder) => void
+  reminders: LifeReminder[];
+  onNotificationSent?: (reminder: LifeReminder) => void;
 }
 
-export function SmartNotificationManager({ 
-  reminders, 
-  onNotificationSent 
+export function SmartNotificationManager({
+  reminders,
+  onNotificationSent,
 }: SmartNotificationManagerProps) {
-  const [isRunning, setIsRunning] = useState(false)
-  const [lastNotification, setLastNotification] = useState<LifeReminder | null>(null)
-  const [nextCheck, setNextCheck] = useState<string | null>(null)
-  const [currentStatus, setCurrentStatus] = useState<string>('')
-  const [statusColor, setStatusColor] = useState<string>('text-gray-600')
-  
-  const scheduleLogicRef = useRef<ScheduleLogic | null>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const lastNotificationTimeRef = useRef<number>(0)
+  const [isRunning, setIsRunning] = useState(false);
+  const [lastNotification, setLastNotification] = useState<LifeReminder | null>(
+    null
+  );
+  const [nextCheck, setNextCheck] = useState<string | null>(null);
+  const [currentStatus, setCurrentStatus] = useState<string>('');
+  const [statusColor, setStatusColor] = useState<string>('text-gray-600');
+
+  const scheduleLogicRef = useRef<ScheduleLogic | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastNotificationTimeRef = useRef<number>(0);
 
   // Initialize schedule logic
   useEffect(() => {
-    const savedSchedule = scheduleUtils.loadSchedule()
-    const schedule = savedSchedule || scheduleUtils.getDefaultSchedule()
-    scheduleLogicRef.current = new ScheduleLogic(schedule)
-    
+    const savedSchedule = scheduleUtils.loadSchedule();
+    const schedule = savedSchedule || scheduleUtils.getDefaultSchedule();
+    scheduleLogicRef.current = new ScheduleLogic(schedule);
+
     // Update status immediately
-    updateStatus()
-  }, [])
+    updateStatus();
+  }, []);
 
   // Update status every minute
   useEffect(() => {
-    const statusInterval = setInterval(updateStatus, 60000) // Every minute
-    return () => clearInterval(statusInterval)
-  }, [])
+    const statusInterval = setInterval(updateStatus, 60000); // Every minute
+    return () => clearInterval(statusInterval);
+  }, []);
 
   const updateStatus = useCallback(() => {
-    if (!scheduleLogicRef.current) return
+    if (!scheduleLogicRef.current) return;
 
-    const status = scheduleLogicRef.current.getCurrentStatus()
-    setCurrentStatus(status.status)
-    setStatusColor(status.color)
+    const status = scheduleLogicRef.current.getCurrentStatus();
+    setCurrentStatus(status.status);
+    setStatusColor(status.color);
 
     // Update next check time
-    const nextOpportunity = scheduleLogicRef.current.getTimeUntilNextOpportunity()
-    setNextCheck(nextOpportunity)
-  }, [])
+    const nextOpportunity =
+      scheduleLogicRef.current.getTimeUntilNextOpportunity();
+    setNextCheck(nextOpportunity);
+  }, []);
 
   const startNotifications = useCallback(() => {
-    if (!scheduleLogicRef.current || !reminders.length) return
+    if (!scheduleLogicRef.current || !reminders.length) return;
 
-    setIsRunning(true)
-    
+    setIsRunning(true);
+
     // Check immediately
-    checkAndSendNotification()
-    
+    checkAndSendNotification();
+
     // Set up interval to check every 5 minutes
-    intervalRef.current = setInterval(() => {
-      checkAndSendNotification()
-    }, 5 * 60 * 1000) // 5 minutes
-  }, [reminders])
+    intervalRef.current = setInterval(
+      () => {
+        checkAndSendNotification();
+      },
+      5 * 60 * 1000
+    ); // 5 minutes
+  }, [reminders]);
 
   const stopNotifications = useCallback(() => {
-    setIsRunning(false)
+    setIsRunning(false);
     if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-  }, [])
+  }, []);
 
   const checkAndSendNotification = useCallback(() => {
-    if (!scheduleLogicRef.current || !reminders.length) return
+    if (!scheduleLogicRef.current || !reminders.length) return;
 
     // Check if we can send notifications
     if (!scheduleLogicRef.current.canSendNotification()) {
-      return
+      return;
     }
 
     // Prevent sending notifications too frequently (minimum 30 minutes apart)
-    const now = Date.now()
+    const now = Date.now();
     if (now - lastNotificationTimeRef.current < 30 * 60 * 1000) {
-      return
+      return;
     }
 
     // Select a random reminder
-    const randomIndex = Math.floor(Math.random() * reminders.length)
-    const selectedReminder = reminders[randomIndex]
+    const randomIndex = Math.floor(Math.random() * reminders.length);
+    const selectedReminder = reminders[randomIndex];
 
     // Send notification
     if (sendNotification(selectedReminder)) {
-      setLastNotification(selectedReminder)
-      lastNotificationTimeRef.current = now
-      onNotificationSent?.(selectedReminder)
-      
+      setLastNotification(selectedReminder);
+      lastNotificationTimeRef.current = now;
+      onNotificationSent?.(selectedReminder);
+
       // Update status
-      updateStatus()
+      updateStatus();
     }
-  }, [reminders, onNotificationSent, updateStatus])
+  }, [reminders, onNotificationSent, updateStatus]);
 
   const sendNotification = useCallback((reminder: LifeReminder): boolean => {
     if (!('Notification' in window) || Notification.permission !== 'granted') {
-      return false
+      return false;
     }
 
     try {
@@ -122,49 +129,52 @@ export function SmartNotificationManager({
         badge: '/favicon.ico',
         tag: 'life-reminder',
         requireInteraction: false,
-        silent: false
-      })
+        silent: false,
+      });
 
       // Auto-close after 8 seconds
       setTimeout(() => {
-        notification.close()
-      }, 8000)
+        notification.close();
+      }, 8000);
 
-      return true
+      return true;
     } catch (error) {
-      console.error('Error sending notification:', error)
-      return false
+      console.error('Error sending notification:', error);
+      return false;
     }
-  }, [])
+  }, []);
 
   const sendTestNotification = useCallback(() => {
     if (reminders.length > 0) {
-      const testReminder = reminders[0]
+      const testReminder = reminders[0];
       if (sendNotification(testReminder)) {
-        setLastNotification(testReminder)
-        lastNotificationTimeRef.current = Date.now()
+        setLastNotification(testReminder);
+        lastNotificationTimeRef.current = Date.now();
       }
     }
-  }, [reminders, sendNotification])
+  }, [reminders, sendNotification]);
 
-  const updateSchedule = useCallback((newSchedule: any) => {
-    if (scheduleLogicRef.current) {
-      scheduleLogicRef.current.updateSchedule(newSchedule)
-      updateStatus()
-    }
-  }, [updateStatus])
+  const updateSchedule = useCallback(
+    (newSchedule: any) => {
+      if (scheduleLogicRef.current) {
+        scheduleLogicRef.current.updateSchedule(newSchedule);
+        updateStatus();
+      }
+    },
+    [updateStatus]
+  );
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+        clearInterval(intervalRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   if (!scheduleLogicRef.current) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
@@ -236,7 +246,8 @@ export function SmartNotificationManager({
               <strong>Last sent:</strong> {lastNotification.text}
             </div>
             <div className="text-xs text-green-600 mt-1">
-              Category: {lastNotification.category} | Priority: {lastNotification.priority}
+              Category: {lastNotification.category} | Priority:{' '}
+              {lastNotification.priority}
             </div>
           </div>
         )}
@@ -254,7 +265,9 @@ export function SmartNotificationManager({
         {/* Reminder Count */}
         <div className="p-3 bg-purple-50 rounded">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-purple-600">Available Reminders:</span>
+            <span className="text-sm text-purple-600">
+              Available Reminders:
+            </span>
             <span className="text-sm font-medium text-purple-700">
               {reminders.length} reminders
             </span>
@@ -262,5 +275,5 @@ export function SmartNotificationManager({
         </div>
       </div>
     </div>
-  )
+  );
 }

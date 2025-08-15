@@ -1,31 +1,31 @@
-"use client"
+'use client';
 
-import { HomePage } from "@/components/pages/home-page"
-import { TasksPage } from "@/components/pages/tasks-page"
-import { ProductivityPage } from "@/components/pages/productivity-page"
-import { AnalyticsPage } from "@/components/pages/analytics-page"
-import { LifePage } from "@/components/pages/life-page"
-import { DataPage } from "@/components/pages/data-page"
+import { HomePage } from '@/components/pages/home-page';
+import { TasksPage } from '@/components/pages/tasks-page';
+import { ProductivityPage } from '@/components/pages/productivity-page';
+import { AnalyticsPage } from '@/components/pages/analytics-page';
+import { LifePage } from '@/components/pages/life-page';
+import { DataPage } from '@/components/pages/data-page';
 
 interface PageRouterProps {
-  currentPage: string
+  currentPage: string;
 }
 
 export function PageRouter({ currentPage }: PageRouterProps) {
   switch (currentPage) {
     case 'home':
-      return <HomePage />
+      return <HomePage />;
     case 'tasks':
-      return <TasksPage />
+      return <TasksPage />;
     case 'productivity':
-      return <ProductivityPage />
+      return <ProductivityPage />;
     case 'analytics':
-      return <AnalyticsPage />
+      return <AnalyticsPage />;
     case 'life':
-      return <LifePage />
+      return <LifePage />;
     case 'data':
-      return <DataPage />
+      return <DataPage />;
     default:
-      return <HomePage />
+      return <HomePage />;
   }
 }

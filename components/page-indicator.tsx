@@ -1,32 +1,32 @@
-"use client"
+'use client';
 
-import { ChevronRight, Home } from "lucide-react"
+import { ChevronRight, Home } from 'lucide-react';
 
 interface PageIndicatorProps {
-  currentPage: string
+  currentPage: string;
 }
 
 const pageTitles: Record<string, string> = {
-  'home': 'Home',
-  'tasks': 'Tasks & Projects',
-  'productivity': 'Productivity Tools',
-  'analytics': 'Analytics & Insights',
-  'life': 'Life & Wellness',
-  'data': 'Data Input & Tracking'
-}
+  home: 'Home',
+  tasks: 'Tasks & Projects',
+  productivity: 'Productivity Tools',
+  analytics: 'Analytics & Insights',
+  life: 'Life & Wellness',
+  data: 'Data Input & Tracking',
+};
 
 const pageDescriptions: Record<string, string> = {
-  'home': 'Your daily overview and command center',
-  'tasks': 'Manage tasks, projects, and stay organized',
-  'productivity': 'Focus, build habits, and track wins',
-  'analytics': 'Monitor performance and gain insights',
-  'life': 'Balance work with wellness and relationships',
-  'data': 'Log activities and maintain detailed records'
-}
+  home: 'Your daily overview and command center',
+  tasks: 'Manage tasks, projects, and stay organized',
+  productivity: 'Focus, build habits, and track wins',
+  analytics: 'Monitor performance and gain insights',
+  life: 'Balance work with wellness and relationships',
+  data: 'Log activities and maintain detailed records',
+};
 
 export function PageIndicator({ currentPage }: PageIndicatorProps) {
-  const title = pageTitles[currentPage] || 'Home'
-  const description = pageDescriptions[currentPage] || 'Your daily overview'
+  const title = pageTitles[currentPage] || 'Home';
+  const description = pageDescriptions[currentPage] || 'Your daily overview';
 
   return (
     <div className="mb-6 glass-card p-6">
@@ -38,13 +38,13 @@ export function PageIndicator({ currentPage }: PageIndicatorProps) {
           {currentPage.replace('-', ' ')}
         </span>
       </div>
-      
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-primary mb-2">{title}</h1>
           <p className="text-secondary">{description}</p>
         </div>
-        
+
         <div className="text-right">
           <div className="text-xs text-secondary mb-1">Current Page</div>
           <div className="text-sm font-medium text-accent capitalize">
@@ -53,5 +53,5 @@ export function PageIndicator({ currentPage }: PageIndicatorProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

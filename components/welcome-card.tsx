@@ -7,15 +7,21 @@ export function WelcomeCard() {
             PF
           </div>
           <div className="ml-4">
-            <h2 className="text-2xl font-bold text-[#333] mb-1">Ready to Build Something Amazing?</h2>
-            <p className="text-[#666] text-base">Your daily grind fuels your dreams. Let's make today count.</p>
+            <h2 className="text-2xl font-bold text-[#333] mb-1">
+              Ready to Build Something Amazing?
+            </h2>
+            <p className="text-[#666] text-base">
+              Your daily grind fuels your dreams. Let's make today count.
+            </p>
           </div>
         </div>
         <div className="text-right">
           <div className="text-sm text-[#999] mb-1">Today's Focus</div>
-          <div className="text-lg font-semibold text-[#FF9F43]">Code • Build • Scale</div>
+          <div className="text-lg font-semibold text-[#FF9F43]">
+            Code • Build • Scale
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

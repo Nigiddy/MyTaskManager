@@ -1,122 +1,133 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Clock, Calendar, Coffee, Save, Edit } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react';
+import { Clock, Calendar, Coffee, Save, Edit } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface TimeSlot {
-  start: string
-  end: string
-  label: string
+  start: string;
+  end: string;
+  label: string;
 }
 
 interface WorkSchedule {
-  workHours: TimeSlot[]
-  breaks: TimeSlot[]
-  isEnabled: boolean
+  workHours: TimeSlot[];
+  breaks: TimeSlot[];
+  isEnabled: boolean;
 }
 
 const defaultSchedule: WorkSchedule = {
   workHours: [
-    { start: "09:00", end: "12:00", label: "Morning Work" },
-    { start: "13:00", end: "17:00", label: "Afternoon Work" }
+    { start: '09:00', end: '12:00', label: 'Morning Work' },
+    { start: '13:00', end: '17:00', label: 'Afternoon Work' },
   ],
   breaks: [
-    { start: "10:30", end: "10:45", label: "Morning Break" },
-    { start: "15:00", end: "15:15", label: "Afternoon Break" },
-    { start: "12:00", end: "13:00", label: "Lunch Break" }
+    { start: '10:30', end: '10:45', label: 'Morning Break' },
+    { start: '15:00', end: '15:15', label: 'Afternoon Break' },
+    { start: '12:00', end: '13:00', label: 'Lunch Break' },
   ],
-  isEnabled: true
-}
+  isEnabled: true,
+};
 
 interface WorkScheduleConfigProps {
-  onScheduleChange?: (schedule: WorkSchedule) => void
-  initialSchedule?: WorkSchedule
+  onScheduleChange?: (schedule: WorkSchedule) => void;
+  initialSchedule?: WorkSchedule;
 }
 
-export function WorkScheduleConfig({ 
-  onScheduleChange, 
-  initialSchedule = defaultSchedule 
+export function WorkScheduleConfig({
+  onScheduleChange,
+  initialSchedule = defaultSchedule,
 }: WorkScheduleConfigProps) {
-  const [schedule, setSchedule] = useState<WorkSchedule>(initialSchedule)
-  const [isEditing, setIsEditing] = useState(false)
-  const [tempSchedule, setTempSchedule] = useState<WorkSchedule>(initialSchedule)
+  const [schedule, setSchedule] = useState<WorkSchedule>(initialSchedule);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempSchedule, setTempSchedule] =
+    useState<WorkSchedule>(initialSchedule);
 
   useEffect(() => {
     // Load schedule from localStorage
-    const saved = localStorage.getItem('workSchedule')
+    const saved = localStorage.getItem('workSchedule');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved)
-        setSchedule(parsed)
-        setTempSchedule(parsed)
+        const parsed = JSON.parse(saved);
+        setSchedule(parsed);
+        setTempSchedule(parsed);
       } catch (error) {
-        console.error('Error loading saved schedule:', error)
+        console.error('Error loading saved schedule:', error);
       }
     }
-  }, [])
+  }, []);
 
   const saveSchedule = () => {
-    setSchedule(tempSchedule)
-    setIsEditing(false)
-    localStorage.setItem('workSchedule', JSON.stringify(tempSchedule))
-    onScheduleChange?.(tempSchedule)
-  }
+    setSchedule(tempSchedule);
+    setIsEditing(false);
+    localStorage.setItem('workSchedule', JSON.stringify(tempSchedule));
+    onScheduleChange?.(tempSchedule);
+  };
 
   const cancelEdit = () => {
-    setTempSchedule(schedule)
-    setIsEditing(false)
-  }
+    setTempSchedule(schedule);
+    setIsEditing(false);
+  };
 
   const addWorkHour = () => {
     setTempSchedule(prev => ({
       ...prev,
-      workHours: [...prev.workHours, { start: "09:00", end: "17:00", label: "New Work Period" }]
-    }))
-  }
+      workHours: [
+        ...prev.workHours,
+        { start: '09:00', end: '17:00', label: 'New Work Period' },
+      ],
+    }));
+  };
 
   const removeWorkHour = (index: number) => {
     setTempSchedule(prev => ({
       ...prev,
-      workHours: prev.workHours.filter((_, i) => i !== index)
-    }))
-  }
+      workHours: prev.workHours.filter((_, i) => i !== index),
+    }));
+  };
 
   const addBreak = () => {
     setTempSchedule(prev => ({
       ...prev,
-      breaks: [...prev.breaks, { start: "10:00", end: "10:15", label: "New Break" }]
-    }))
-  }
+      breaks: [
+        ...prev.breaks,
+        { start: '10:00', end: '10:15', label: 'New Break' },
+      ],
+    }));
+  };
 
   const removeBreak = (index: number) => {
     setTempSchedule(prev => ({
       ...prev,
-      breaks: prev.breaks.filter((_, i) => i !== index)
-    }))
-  }
+      breaks: prev.breaks.filter((_, i) => i !== index),
+    }));
+  };
 
-  const updateWorkHour = (index: number, field: keyof TimeSlot, value: string) => {
+  const updateWorkHour = (
+    index: number,
+    field: keyof TimeSlot,
+    value: string
+  ) => {
     setTempSchedule(prev => ({
       ...prev,
-      workHours: prev.workHours.map((hour, i) => 
+      workHours: prev.workHours.map((hour, i) =>
         i === index ? { ...hour, [field]: value } : hour
-      )
-    }))
-  }
+      ),
+    }));
+  };
 
   const updateBreak = (index: number, field: keyof TimeSlot, value: string) => {
     setTempSchedule(prev => ({
       ...prev,
-      breaks: prev.breaks.map((break_, i) => 
+      breaks: prev.breaks.map((break_, i) =>
         i === index ? { ...break_, [field]: value } : break_
-      )
-    }))
-  }
+      ),
+    }));
+  };
 
   const toggleSchedule = () => {
-    setTempSchedule(prev => ({ ...prev, isEnabled: !prev.isEnabled }))
-  }
+    setTempSchedule(prev => ({ ...prev, isEnabled: !prev.isEnabled }));
+  };
 
   return (
     <div className="p-4 bg-white border border-[#FFE8D6] rounded-lg shadow-sm">
@@ -194,14 +205,17 @@ export function WorkScheduleConfig({
               </Button>
             )}
           </div>
-          
+
           <div className="space-y-2">
             {tempSchedule.workHours.map((hour, index) => (
-              <div key={index} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+              <div
+                key={index}
+                className="flex items-center space-x-2 p-2 bg-gray-50 rounded"
+              >
                 <input
                   type="time"
                   value={hour.start}
-                  onChange={(e) => updateWorkHour(index, 'start', e.target.value)}
+                  onChange={e => updateWorkHour(index, 'start', e.target.value)}
                   disabled={!isEditing}
                   className="border border-gray-300 rounded px-2 py-1 text-sm"
                 />
@@ -209,14 +223,14 @@ export function WorkScheduleConfig({
                 <input
                   type="time"
                   value={hour.end}
-                  onChange={(e) => updateWorkHour(index, 'end', e.target.value)}
+                  onChange={e => updateWorkHour(index, 'end', e.target.value)}
                   disabled={!isEditing}
                   className="border border-gray-300 rounded px-2 py-1 text-sm"
                 />
                 <input
                   type="text"
                   value={hour.label}
-                  onChange={(e) => updateWorkHour(index, 'label', e.target.value)}
+                  onChange={e => updateWorkHour(index, 'label', e.target.value)}
                   disabled={!isEditing}
                   placeholder="Label"
                   className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
@@ -254,14 +268,17 @@ export function WorkScheduleConfig({
               </Button>
             )}
           </div>
-          
+
           <div className="space-y-2">
             {tempSchedule.breaks.map((break_, index) => (
-              <div key={index} className="flex items-center space-x-2 p-2 bg-green-50 rounded">
+              <div
+                key={index}
+                className="flex items-center space-x-2 p-2 bg-green-50 rounded"
+              >
                 <input
                   type="time"
                   value={break_.start}
-                  onChange={(e) => updateBreak(index, 'start', e.target.value)}
+                  onChange={e => updateBreak(index, 'start', e.target.value)}
                   disabled={!isEditing}
                   className="border border-gray-300 rounded px-2 py-1 text-sm"
                 />
@@ -269,14 +286,14 @@ export function WorkScheduleConfig({
                 <input
                   type="time"
                   value={break_.end}
-                  onChange={(e) => updateBreak(index, 'end', e.target.value)}
+                  onChange={e => updateBreak(index, 'end', e.target.value)}
                   disabled={!isEditing}
                   className="border border-gray-300 rounded px-2 py-1 text-sm"
                 />
                 <input
                   type="text"
                   value={break_.label}
-                  onChange={(e) => updateBreak(index, 'label', e.target.value)}
+                  onChange={e => updateBreak(index, 'label', e.target.value)}
                   disabled={!isEditing}
                   placeholder="Label"
                   className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
@@ -299,7 +316,8 @@ export function WorkScheduleConfig({
         {/* Current Status */}
         <div className="p-3 bg-blue-50 border border-blue-200 rounded">
           <div className="text-sm text-blue-700">
-            <strong>Current Status:</strong> {schedule.isEnabled ? 'Schedule Active' : 'Schedule Disabled'}
+            <strong>Current Status:</strong>{' '}
+            {schedule.isEnabled ? 'Schedule Active' : 'Schedule Disabled'}
           </div>
           <div className="text-xs text-blue-600 mt-1">
             Notifications will be sent during breaks and outside work hours.
@@ -307,5 +325,5 @@ export function WorkScheduleConfig({
         </div>
       </div>
     </div>
-  )
+  );
 }

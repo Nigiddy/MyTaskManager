@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { PerformanceAnalytics } from "@/components/performance-analytics"
-import { BusinessIntelligence } from "@/components/business-intelligence"
-import { LearningProgress } from "@/components/learning-progress"
-import { CaseTypeBreakdown } from "@/components/case-type-breakdown"
+import { PerformanceAnalytics } from '@/components/performance-analytics';
+import { BusinessIntelligence } from '@/components/business-intelligence';
+import { LearningProgress } from '@/components/learning-progress';
+import { CaseTypeBreakdown } from '@/components/case-type-breakdown';
 
 export function AnalyticsPage() {
   return (
@@ -11,9 +11,12 @@ export function AnalyticsPage() {
       {/* Page Header */}
       <div className="p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-200">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-indigo-800 mb-2">Analytics & Insights</h2>
+          <h2 className="text-2xl font-bold text-indigo-800 mb-2">
+            Analytics & Insights
+          </h2>
           <p className="text-sm text-indigo-600">
-            Track performance, monitor business metrics, and analyze your progress
+            Track performance, monitor business metrics, and analyze your
+            progress
           </p>
         </div>
       </div>
@@ -83,5 +86,5 @@ export function AnalyticsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
