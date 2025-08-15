@@ -16,7 +16,7 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF8F3]">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8F3] via-[#FFF1E6] to-[#FFE8D6]">
       {/* Header */}
       <Header />
 
@@ -31,7 +31,7 @@ export function Dashboard() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-6 transition-all duration-300">
+        <main className="flex-1 padding-responsive transition-all duration-300">
           <PageIndicator currentPage={currentPage} />
           <PageTransition currentPage={currentPage}>
             <PageRouter currentPage={currentPage} />
