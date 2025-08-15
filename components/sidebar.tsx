@@ -13,6 +13,13 @@ import {
   Settings,
   LogOut,
   X,
+  Code,
+  TrendingUp,
+  Dumbbell,
+  Palette,
+  MessageSquare,
+  Target,
+  Users,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -30,30 +37,48 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 border-b border-[#FFE8D6]">
-        <h1 className="text-xl font-bold text-[#333]">Task Manager</h1>
+        <h1 className="text-xl font-bold text-[#333]">Task Master</h1>
         <button className="md:hidden rounded-full p-1 hover:bg-[#FFE8D6]" onClick={() => setOpen(false)}>
           <X size={20} />
         </button>
       </div>
 
       <div className="px-4 py-6">
-        <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Main</p>
+        <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Daily Grind</p>
         <nav className="space-y-1">
           <SidebarItem href="/" icon={LayoutDashboard} text="Dashboard" active />
-          <SidebarItem href="/activity" icon={Activity} text="Activity" />
-          <SidebarItem href="/statistic" icon={BarChart2} text="Statistic" />
-          <SidebarItem href="/performance" icon={Briefcase} text="Performance Cases" />
-          <SidebarItem href="/tasks" icon={CheckSquare} text="Tasks" badge={5} />
-          <SidebarItem href="/libraries" icon={Library} text="Libraries" />
-          <SidebarItem href="/saved" icon={Bookmark} text="Saved" />
+          <SidebarItem href="/coding" icon={Code} text="Coding Sessions" />
+          <SidebarItem href="/fitness" icon={Dumbbell} text="Fitness & Wellness" />
+          <SidebarItem href="/business" icon={Briefcase} text="Business Strategy" />
+          <SidebarItem href="/trading" icon={TrendingUp} text="Trading Review" />
+          <SidebarItem href="/design" icon={Palette} text="Design Work" />
         </nav>
 
         <div className="mt-8">
-          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Recent Messages</p>
+          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Business Focus</p>
+          <nav className="space-y-1">
+            <SidebarItem href="/dem-man" icon={Target} text="Dem Man Brand" />
+            <SidebarItem href="/dicla" icon={Users} text="Dicla Clothing" />
+            <SidebarItem href="/outreach" icon={MessageSquare} text="Client Outreach" />
+            <SidebarItem href="/projects" icon={Library} text="Personal Projects" />
+          </nav>
+        </div>
+
+        <div className="mt-8">
+          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Analytics</p>
+          <nav className="space-y-1">
+            <SidebarItem href="/activity" icon={Activity} text="Activity Tracker" />
+            <SidebarItem href="/statistic" icon={BarChart2} text="Performance Stats" />
+            <SidebarItem href="/tasks" icon={CheckSquare} text="Task History" badge={12} />
+          </nav>
+        </div>
+
+        <div className="mt-8">
+          <p className="text-xs font-semibold text-[#999] mb-4 uppercase">Quick Actions</p>
           <div className="space-y-3">
-            <RecentMessage name="Erik Gunsel" />
-            <RecentMessage name="Arthur Adelk" />
-            <RecentMessage name="Emily Smith" />
+            <QuickAction name="Add New Task" action="+" />
+            <QuickAction name="Start Coding Session" action="▶" />
+            <QuickAction name="Log Workout" action="💪" />
           </div>
         </div>
       </div>
@@ -81,7 +106,7 @@ function SidebarItem({ href, icon: Icon, text, active, badge }: SidebarItemProps
     <Link
       href={href}
       className={cn(
-        "flex items-center px-2 py-2 text-sm font-medium rounded-lg",
+        "flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors",
         active ? "bg-[#FFE8D6] text-[#333]" : "text-[#666] hover:bg-[#FFE8D6] hover:text-[#333]",
       )}
     >
@@ -96,16 +121,11 @@ function SidebarItem({ href, icon: Icon, text, active, badge }: SidebarItemProps
   )
 }
 
-function RecentMessage({ name }: { name: string }) {
+function QuickAction({ name, action }: { name: string; action: string }) {
   return (
-    <div className="flex items-center">
-      <div className="h-8 w-8 rounded-full bg-[#FFE8D6] flex items-center justify-center text-xs font-medium text-[#666]">
-        {name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")}
-      </div>
-      <span className="ml-3 text-sm font-medium text-[#666]">{name}</span>
+    <div className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#FFE8D6] hover:border-[#FF9F43] transition-colors cursor-pointer">
+      <span className="text-sm text-[#666]">{name}</span>
+      <span className="text-lg font-bold text-[#FF9F43]">{action}</span>
     </div>
   )
 }

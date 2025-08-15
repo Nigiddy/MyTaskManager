@@ -17,13 +17,13 @@
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 222.2 84% 4.9%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 222.2 84% 4.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -72,5 +72,285 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Mobile-First Responsive Utilities */
+  .mobile-container {
+    @apply px-2 sm:px-4 md:px-6 lg:px-8;
+  }
+  
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .mobile-heading {
+    @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+  }
+  
+  .mobile-padding {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  .mobile-margin {
+    @apply m-2 sm:m-3 lg:m-4;
+  }
+  
+  /* Touch-Friendly Interactive Elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .touch-friendly {
+    @apply cursor-pointer select-none touch-manipulation;
+  }
+  
+  /* Smooth Animations */
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .hover-lift {
+    @apply hover:shadow-lg hover:-translate-y-1 transition-all duration-200;
+  }
+  
+  /* Focus States for Accessibility */
+  .focus-visible-ring {
+    @apply focus-visible:ring-2 focus-visible:ring-[#FF9F43] focus-visible:ring-offset-2;
+  }
+  
+  /* Loading States */
+  .loading-skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+  
+  /* Custom Scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #FF9F43 #FFE8D6;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #FFE8D6;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #FF9F43;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #FF8F33;
+  }
+  
+  /* Confetti Animation */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+  .confetti {
+    animation: confetti-fall 3s linear forwards;
+  }
+  
+  /* Pulse Animation for Voice Recording */
+  @keyframes pulse-recording {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+  }
+  
+  .pulse-recording {
+    animation: pulse-recording 1s ease-in-out infinite;
+  }
+  
+  /* Responsive Typography */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl;
+  }
+  
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl;
+  }
+  
+  /* Responsive Spacing */
+  .space-responsive-xs {
+    @apply space-y-2 sm:space-y-3;
+  }
+  
+  .space-responsive-sm {
+    @apply space-y-3 sm:space-y-4;
+  }
+  
+  .space-responsive-base {
+    @apply space-y-4 sm:space-y-6;
+  }
+  
+  .space-responsive-lg {
+    @apply space-y-6 sm:space-y-8;
+  }
+  
+  /* Card Responsive Variants */
+  .card-mobile {
+    @apply p-3 sm:p-4 lg:p-6 rounded-lg shadow-sm sm:shadow-md;
+  }
+  
+  .card-tablet {
+    @apply p-4 sm:p-6 lg:p-8 rounded-xl shadow-md sm:shadow-lg;
+  }
+  
+  .card-desktop {
+    @apply p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg sm:shadow-xl;
+  }
+  
+  /* Button Responsive Variants */
+  .btn-mobile {
+    @apply px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base;
+  }
+  
+  .btn-tablet {
+    @apply px-4 py-2.5 text-base sm:px-6 sm:py-3 sm:text-lg;
+  }
+  
+  .btn-desktop {
+    @apply px-6 py-3 text-lg sm:px-8 sm:py-4 sm:text-xl;
+  }
+  
+  /* Grid Responsive Utilities */
+  .grid-mobile-1 {
+    @apply grid-cols-1;
+  }
+  
+  .grid-mobile-2 {
+    @apply grid-cols-1 sm:grid-cols-2;
+  }
+  
+  .grid-mobile-3 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .grid-mobile-4 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+  
+  /* Flexbox Responsive Utilities */
+  .flex-mobile-col {
+    @apply flex-col sm:flex-row;
+  }
+  
+  .flex-mobile-wrap {
+    @apply flex-wrap sm:flex-nowrap;
+  }
+  
+  .flex-mobile-center {
+    @apply justify-center sm:justify-start;
+  }
+  
+  /* Text Alignment Responsive */
+  .text-mobile-center {
+    @apply text-center sm:text-left;
+  }
+  
+  .text-mobile-left {
+    @apply text-left;
+  }
+  
+  .text-mobile-right {
+    @apply text-right;
+  }
+  
+  /* Hidden/Visible Responsive */
+  .hidden-mobile {
+    @apply hidden sm:block;
+  }
+  
+  .visible-mobile {
+    @apply block sm:hidden;
+  }
+  
+  .hidden-tablet {
+    @apply hidden lg:block;
+  }
+  
+  .visible-tablet {
+    @apply block lg:hidden;
+  }
+  
+  .hidden-desktop {
+    @apply hidden xl:block;
+  }
+  
+  .visible-desktop {
+    @apply block xl:hidden;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-auto {
+    @apply dark:bg-gray-900 dark:text-gray-100;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    @apply border-2 border-black;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-visible {
+    display: block !important;
   }
 }

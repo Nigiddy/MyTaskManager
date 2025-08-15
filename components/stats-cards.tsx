@@ -2,37 +2,39 @@ import { LineChart } from "@/components/ui/chart"
 
 export function StatsCards() {
   // Sample data for charts
-  const newCasesData = [
-    { name: "Week 1", value: 80 },
-    { name: "Week 2", value: 90 },
-    { name: "Week 3", value: 85 },
-    { name: "Week 4", value: 104 },
+  const codingSessionsData = [
+    { name: "Week 1", value: 85 },
+    { name: "Week 2", value: 92 },
+    { name: "Week 3", value: 88 },
+    { name: "Week 4", value: 95 },
   ]
 
-  const newTasksData = [
-    { name: "Week 1", value: 40 },
-    { name: "Week 2", value: 35 },
-    { name: "Week 3", value: 30 },
-    { name: "Week 4", value: 34 },
+  const businessTasksData = [
+    { name: "Week 1", value: 65 },
+    { name: "Week 2", value: 78 },
+    { name: "Week 3", value: 82 },
+    { name: "Week 4", value: 89 },
   ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <StatCard
-        title="NEW CASES"
-        value="104"
-        trend="+14,88%"
+        title="CODING SESSIONS"
+        value="95%"
+        trend="+7.2%"
         trendUp={true}
-        chartData={newCasesData}
+        chartData={codingSessionsData}
         chartColor="#4CAF50"
+        subtitle="Full-Stack & Python Focus"
       />
       <StatCard
-        title="NEW TASKS"
-        value="34"
-        trend="-5,67%"
-        trendUp={false}
-        chartData={newTasksData}
-        chartColor="#F44336"
+        title="BUSINESS TASKS"
+        value="89%"
+        trend="+8.5%"
+        trendUp={true}
+        chartData={businessTasksData}
+        chartColor="#FF9F43"
+        subtitle="Dem Man & Dicla Growth"
       />
     </div>
   )
@@ -45,9 +47,10 @@ interface StatCardProps {
   trendUp: boolean
   chartData: { name: string; value: number }[]
   chartColor: string
+  subtitle: string
 }
 
-function StatCard({ title, value, trend, trendUp, chartData, chartColor }: StatCardProps) {
+function StatCard({ title, value, trend, trendUp, chartData, chartColor, subtitle }: StatCardProps) {
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
       <div className="mb-2">
@@ -56,7 +59,7 @@ function StatCard({ title, value, trend, trendUp, chartData, chartColor }: StatC
           <h3 className="text-3xl font-bold">{value}</h3>
           <span className={`ml-2 text-sm ${trendUp ? "text-green-500" : "text-red-500"}`}>{trend}</span>
         </div>
-        <p className="text-xs text-[#999] mt-1">Trends last month</p>
+        <p className="text-xs text-[#999] mt-1">{subtitle}</p>
       </div>
       <div className="h-16">
         <LineChart
