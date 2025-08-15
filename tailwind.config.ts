@@ -70,6 +70,22 @@ const config = {
           700: '#FF7F23',
           800: '#FF6F13',
           900: '#FF5F03',
+        },
+        // Tech Theme Colors
+        'tech': {
+          bg: '#1A1A1A',
+          'bg-secondary': '#2A2A2A',
+          'bg-tertiary': '#333333',
+          accent: '#4CC9F0',
+          highlight: '#A29BFE',
+          'text-primary': '#FFFFFF',
+          'text-secondary': 'rgba(255, 255, 255, 0.7)',
+          border: 'rgba(255, 255, 255, 0.15)',
+          'border-light': 'rgba(255, 255, 255, 0.08)',
+          glow: {
+            cyan: 'rgba(76, 201, 240, 0.3)',
+            violet: 'rgba(162, 155, 254, 0.5)',
+          }
         }
       },
       borderRadius: {

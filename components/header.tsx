@@ -21,7 +21,7 @@ export function Header() {
         <Input
           type="search"
           placeholder="Search tasks, projects, or goals..."
-          className="pl-12 glass-card border-0 rounded-full h-12 focus-visible:ring-2 focus-visible:ring-[#FF9F43] focus-visible:ring-opacity-50 transition-all duration-200"
+          className="pl-12 glass-input border-0 rounded-full h-12 focus-visible:ring-2 focus-visible:ring-[#4CC9F0] focus-visible:ring-opacity-50 transition-all duration-200 text-white placeholder:text-secondary"
         />
       </div>
 
@@ -29,18 +29,18 @@ export function Header() {
       <div className="flex items-center ml-auto space-x-6 text-sm">
         <div className="hidden md:flex items-center space-x-4">
           <div className="glass-card px-3 py-2 rounded-full">
-            <Target size={16} className="mr-2 text-[#FF9F43]" />
-            <span className="font-medium text-[#333]">Dem Man</span>
+            <Target size={16} className="mr-2 text-accent" />
+            <span className="font-medium text-primary">Dem Man</span>
           </div>
           <div className="glass-card px-3 py-2 rounded-full">
-            <TrendingUp size={16} className="mr-2 text-[#FF9F43]" />
-            <span className="font-medium text-[#333]">Dicla</span>
+            <TrendingUp size={16} className="mr-2 text-accent" />
+            <span className="font-medium text-primary">Dicla</span>
           </div>
         </div>
 
         {/* Notification Bell */}
         <Button variant="ghost" size="icon" className="relative glass-button hover:bg-white/20 transition-all duration-200">
-          <Bell size={22} className="text-[#666]" />
+          <Bell size={22} className="text-secondary" />
           <span className="absolute top-2 right-2 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
         </Button>
 
@@ -50,15 +50,15 @@ export function Header() {
             <Button variant="ghost" className="flex items-center space-x-3 p-2 glass-button hover:bg-white/20 transition-all duration-200">
               <div className="flex items-center space-x-3">
                 <div className="text-right hidden lg:block">
-                  <p className="text-xs text-[#999] uppercase tracking-wider font-medium">Full-Stack Developer</p>
-                  <p className="text-sm font-semibold text-[#333]">Peter Malby</p>
-                  <p className="text-xs text-[#FF9F43] font-medium">Building the Future</p>
+                  <p className="text-xs text-secondary uppercase tracking-wider font-medium">Full-Stack Developer</p>
+                  <p className="text-sm font-semibold text-primary">Peter Malby</p>
+                  <p className="text-xs text-accent font-medium">Building the Future</p>
                 </div>
                 <Avatar className="h-12 w-12 border-2 border-white/30 shadow-lg hover:shadow-xl transition-all duration-200">
                   <AvatarImage src="/placeholder-user.jpg" />
                   <AvatarFallback className="bg-gradient-to-br from-[#FF9F43] to-[#FF7F50] text-white font-bold text-lg">PM</AvatarFallback>
                 </Avatar>
-                <ChevronDown size={18} className="text-[#999] transition-transform duration-200" />
+                <ChevronDown size={18} className="text-secondary transition-transform duration-200" />
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -70,9 +70,9 @@ export function Header() {
                 <AvatarFallback className="bg-gradient-to-br from-[#FF9F43] to-[#FF7F50] text-white font-bold text-xl">PM</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="font-bold text-lg text-[#333]">Peter Malby</h3>
-                <p className="text-sm text-[#666] mb-2">Full-Stack Developer</p>
-                <p className="text-xs text-[#999] leading-relaxed">
+                <h3 className="font-bold text-lg text-primary">Peter Malby</h3>
+                <p className="text-sm text-secondary mb-2">Full-Stack Developer</p>
+                <p className="text-xs text-secondary leading-relaxed">
                   Passionate about creating intuitive user experiences and building scalable applications. 
                   Always learning and exploring new technologies to deliver better solutions.
                 </p>
@@ -82,13 +82,13 @@ export function Header() {
             <DropdownMenuSeparator className="bg-white/20" />
             
             <DropdownMenuItem className="flex items-center space-x-3 p-3 hover:bg-white/20 rounded-lg cursor-pointer transition-all duration-200">
-              <User size={18} className="text-[#FF9F43]" />
-              <span className="text-[#333]">View Profile</span>
+              <User size={18} className="text-accent" />
+              <span className="text-primary">View Profile</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem className="flex items-center space-x-3 p-3 hover:bg-white/20 rounded-lg cursor-pointer transition-all duration-200">
-              <Settings size={18} className="text-[#FF9F43]" />
-              <span className="text-[#333]">Settings</span>
+              <Settings size={18} className="text-accent" />
+              <span className="text-primary">Settings</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

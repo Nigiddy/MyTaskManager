@@ -1,0 +1,363 @@
+/* Sleek & Modern Tech Theme for Task Manager */
+:root {
+  /* Base Theme Colors */
+  --color-bg: #1A1A1A;
+  --color-accent: #4CC9F0;
+  --color-highlight: #A29BFE;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  
+  /* Extended Palette */
+  --color-bg-secondary: #2A2A2A;
+  --color-bg-tertiary: #333333;
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-border-light: rgba(255, 255, 255, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-glow-cyan: rgba(76, 201, 240, 0.3);
+  --color-glow-violet: rgba(162, 155, 254, 0.5);
+  
+  /* Glassmorphism Effects */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(20px);
+  --glass-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
+  
+  /* Component Specific */
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --button-primary-bg: #4CC9F0;
+  --button-primary-text: #FFFFFF;
+  --button-hover-glow: rgba(162, 155, 254, 0.5);
+  
+  /* Status Colors */
+  --status-success: #00D4AA;
+  --status-warning: #FFB800;
+  --status-error: #FF6B6B;
+  --status-info: #4CC9F0;
+}
+
+/* Base Theme Application */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+/* Enhanced Glassmorphism Components */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 
+    0 4px 30px var(--color-shadow),
+    var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(76, 201, 240, 0.1), 
+    rgba(162, 155, 254, 0.05));
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: 
+    0 8px 32px var(--color-shadow),
+    var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(76, 201, 240, 0.08), 
+    rgba(162, 155, 254, 0.03));
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-panel > * {
+  position: relative;
+  z-index: 2;
+}
+
+.glass-button {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-accent);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 20px var(--color-shadow),
+    0 0 15px var(--color-glow-cyan);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.glass-button:hover {
+  background: var(--color-accent);
+  box-shadow: 
+    0 6px 25px var(--color-shadow),
+    0 0 20px var(--color-glow-violet);
+  transform: translateY(-2px);
+}
+
+.glass-button:active {
+  transform: translateY(0);
+}
+
+.glass-button.secondary {
+  background: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.glass-button.secondary:hover {
+  background: rgba(76, 201, 240, 0.1);
+  box-shadow: 0 0 20px var(--color-glow-cyan);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 
+    0 8px 40px var(--color-shadow),
+    var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(76, 201, 240, 0.05), 
+    rgba(162, 155, 254, 0.02));
+  border-radius: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-nav > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Text Utilities */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-highlight {
+  color: var(--color-highlight);
+}
+
+/* Background Utilities */
+.bg-primary {
+  background-color: var(--color-bg);
+}
+
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--color-bg-tertiary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-highlight {
+  background-color: var(--color-highlight);
+}
+
+/* Border Utilities */
+.border-primary {
+  border-color: var(--color-border);
+}
+
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+.border-highlight {
+  border-color: var(--color-highlight);
+}
+
+/* Glow Effects */
+.glow-cyan {
+  box-shadow: 0 0 20px var(--color-glow-cyan);
+}
+
+.glow-violet {
+  box-shadow: 0 0 20px var(--color-glow-violet);
+}
+
+/* Hover Effects */
+.hover-glow:hover {
+  box-shadow: 0 0 25px var(--color-glow-cyan);
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow-violet:hover {
+  box-shadow: 0 0 25px var(--color-glow-violet);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Input Fields */
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  color: var(--color-text-primary);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 15px var(--color-glow-cyan);
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-highlight);
+}
+
+/* Selection Styling */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+::-moz-selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Focus Ring */
+.focus-ring:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(76, 201, 240, 0.1);
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Status Indicators */
+.status-success {
+  background: var(--status-success);
+  color: var(--color-bg);
+}
+
+.status-warning {
+  background: var(--status-warning);
+  color: var(--color-bg);
+}
+
+.status-error {
+  background: var(--status-error);
+  color: var(--color-text-primary);
+}
+
+.status-info {
+  background: var(--status-info);
+  color: var(--color-bg);
+}

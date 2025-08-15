@@ -30,24 +30,24 @@ export function PageIndicator({ currentPage }: PageIndicatorProps) {
 
   return (
     <div className="mb-6 glass-card p-6">
-      <div className="flex items-center space-x-2 text-sm text-white/70 mb-3">
+      <div className="flex items-center space-x-2 text-sm text-secondary mb-3">
         <Home className="h-4 w-4" />
         <span>Dashboard</span>
         <ChevronRight className="h-4 w-4" />
-        <span className="font-medium text-white capitalize">
+        <span className="font-medium text-primary capitalize">
           {currentPage.replace('-', ' ')}
         </span>
       </div>
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2">{title}</h1>
-          <p className="text-white/80">{description}</p>
+          <h1 className="text-2xl font-bold text-primary mb-2">{title}</h1>
+          <p className="text-secondary">{description}</p>
         </div>
         
         <div className="text-right">
-          <div className="text-xs text-white/60 mb-1">Current Page</div>
-          <div className="text-sm font-medium text-[#FF9F43] capitalize">
+          <div className="text-xs text-secondary mb-1">Current Page</div>
+          <div className="text-sm font-medium text-accent capitalize">
             {currentPage.replace('-', ' ')}
           </div>
         </div>

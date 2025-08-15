@@ -87,12 +87,12 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/20">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#FF9F43] to-[#FF6B6B] rounded-lg flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 bg-gradient-to-r from-accent to-highlight rounded-lg flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-sm">TM</span>
             </div>
             <div>
-              <h1 className="font-bold text-lg text-[#333]">Task Master</h1>
-              <p className="text-xs text-[#666]">Your Command Center</p>
+              <h1 className="font-bold text-lg text-primary">Task Master</h1>
+              <p className="text-xs text-secondary">Your Command Center</p>
             </div>
           </div>
           <Button
@@ -123,18 +123,18 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
                   active:scale-95 touch-manipulation
                   ${isActive 
                     ? `bg-gradient-to-r ${item.color} text-white shadow-md` 
-                    : 'glass-card hover:bg-white/20 text-[#333] hover:shadow-sm'
+                    : 'glass-card hover:bg-white/20 text-primary hover:shadow-sm'
                   }
                 `}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-[#666]'}`} />
+                    <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-secondary'}`} />
                     <div>
-                      <div className={`font-medium ${isActive ? 'text-white' : 'text-[#333]'}`}>
+                      <div className={`font-medium ${isActive ? 'text-white' : 'text-primary'}`}>
                         {item.label}
                       </div>
-                      <div className={`text-xs ${isActive ? 'text-white/80' : 'text-[#666]'}`}>
+                      <div className={`text-xs ${isActive ? 'text-white/80' : 'text-secondary'}`}>
                         {item.description}
                       </div>
                     </div>
@@ -151,8 +151,8 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20 glass-panel rounded-t-2xl">
           <div className="text-center">
-            <div className="text-xs text-[#666] mb-2">Current Page</div>
-            <div className="text-sm font-medium text-[#333] capitalize">
+            <div className="text-xs text-secondary mb-2">Current Page</div>
+            <div className="text-sm font-medium text-primary capitalize">
               {currentPage.replace('-', ' ')}
             </div>
           </div>

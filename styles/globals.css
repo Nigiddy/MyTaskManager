@@ -2,8 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import the new tech theme */
+@import './theme.css';
+
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
 }
 
 @layer utilities {

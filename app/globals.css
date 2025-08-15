@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import the new tech theme */
+@import '../styles/theme.css';
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -13,6 +16,8 @@
     -webkit-user-select: none;
     user-select: none;
     font-family: var(--font-inter), system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
   }
 
   /* Enhanced Typography Scale */
@@ -48,16 +53,16 @@
 }
 
 @layer components {
-  /* Refined Glassmorphism Effects */
+  /* Refined Glassmorphism Effects - Updated for Tech Theme */
   .glass-card {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
     border-radius: 20px;
     box-shadow: 
-      0 4px 30px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 4px 30px var(--color-shadow),
+      var(--glass-shadow);
     position: relative;
     overflow: hidden;
   }
@@ -69,7 +74,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(135deg, 
+      rgba(76, 201, 240, 0.1), 
+      rgba(162, 155, 254, 0.05));
     border-radius: 20px;
     pointer-events: none;
     z-index: 1;
@@ -81,14 +88,14 @@
   }
 
   .glass-panel {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
     border-radius: 18px;
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      0 8px 32px var(--color-shadow),
+      var(--glass-shadow);
     position: relative;
     overflow: hidden;
   }
@@ -100,7 +107,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.03));
+    background: linear-gradient(135deg, 
+      rgba(76, 201, 240, 0.08), 
+      rgba(162, 155, 254, 0.03));
     border-radius: 18px;
     pointer-events: none;
     z-index: 1;
@@ -112,36 +121,32 @@
   }
 
   .glass-button {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--color-accent);
     border-radius: 16px;
     box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 4px 20px var(--color-shadow),
+      0 0 15px var(--color-glow-cyan);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    font-weight: 600;
+    letter-spacing: 0.025em;
   }
 
-  .glass-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
-    border-radius: 16px;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  .glass-button:hover {
+    background: var(--color-accent);
+    box-shadow: 
+      0 6px 25px var(--color-shadow),
+      0 0 20px var(--color-glow-violet);
+    transform: translateY(-2px);
   }
 
-  .glass-button:hover::before {
-    opacity: 1;
+  .glass-button:active {
+    transform: translateY(0);
   }
 
   .glass-button > * {
@@ -150,14 +155,14 @@
   }
 
   .glass-nav {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
     box-shadow: 
-      0 8px 40px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 8px 40px var(--color-shadow),
+      var(--glass-shadow);
     position: relative;
     overflow: hidden;
   }
@@ -169,7 +174,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02));
+    background: linear-gradient(135deg, 
+      rgba(76, 201, 240, 0.05), 
+      rgba(162, 155, 254, 0.02));
     border-radius: 24px;
     pointer-events: none;
     z-index: 1;
