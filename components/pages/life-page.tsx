@@ -3,6 +3,8 @@
 import { LifeReminders } from "@/components/life-reminders"
 import { MicroWins } from "@/components/micro-wins"
 import { TodaysWin } from "@/components/todays-win"
+import { NotificationService } from "@/components/notification-service"
+import { WorkScheduleConfig } from "@/components/work-schedule-config"
 
 export function LifePage() {
   return (
@@ -25,6 +27,19 @@ export function LifePage() {
 
       {/* Today's Win */}
       <TodaysWin />
+
+      {/* Smart Notification System */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-[#333] flex items-center">
+          🔔 Smart Notifications
+        </h3>
+        
+        {/* Notification Service */}
+        <NotificationService />
+        
+        {/* Work Schedule Configuration */}
+        <WorkScheduleConfig />
+      </div>
 
       {/* Wellness Tracking */}
       <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
@@ -101,6 +116,18 @@ export function LifePage() {
               <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '100%' }}></div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Smart Notification Info */}
+      <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+        <h3 className="font-semibold text-purple-800 mb-3">🤖 Smart Notification System</h3>
+        <div className="space-y-2 text-sm text-purple-700">
+          <div>• <strong>Schedule Aware:</strong> Only sends notifications during breaks and non-work hours</div>
+          <div>• <strong>Smart Timing:</strong> Prevents notification spam with minimum 30-minute intervals</div>
+          <div>• <strong>Weekend Friendly:</strong> Always allows notifications on weekends</div>
+          <div>• <strong>Customizable:</strong> Set your own work hours and break times</div>
+          <div>• <strong>Permission Based:</strong> Respects browser notification settings</div>
         </div>
       </div>
     </div>

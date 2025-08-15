@@ -99,14 +99,14 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
             variant="ghost"
             size="sm"
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden"
+            className="lg:hidden hover:bg-gray-100"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)]">
           {navigationItems.map((item) => {
             const Icon = item.icon
             const isActive = currentPage === item.id
@@ -120,6 +120,7 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
                 }}
                 className={`
                   w-full p-3 rounded-lg text-left transition-all duration-200
+                  active:scale-95 touch-manipulation
                   ${isActive 
                     ? `bg-gradient-to-r ${item.color} text-white shadow-md` 
                     : 'hover:bg-gray-50 text-[#333] hover:shadow-sm'
@@ -163,7 +164,7 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
         variant="ghost"
         size="sm"
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-30 lg:hidden bg-white border border-[#FFE8D6] shadow-md"
+        className="fixed top-4 left-4 z-30 lg:hidden bg-white border border-[#FFE8D6] shadow-md hover:bg-gray-50 active:scale-95 touch-manipulation"
       >
         <Menu className="h-5 w-5" />
       </Button>

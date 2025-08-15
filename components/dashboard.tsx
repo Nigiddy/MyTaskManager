@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { Sidebar } from "@/components/sidebar"
 import { PageRouter } from "@/components/page-router"
 import { PageIndicator } from "@/components/page-indicator"
+import { PageTransition } from "@/components/page-transition"
 
 export function Dashboard() {
   const [currentPage, setCurrentPage] = useState('home')
@@ -32,7 +33,9 @@ export function Dashboard() {
         {/* Main Content */}
         <main className="flex-1 p-4 lg:p-6 transition-all duration-300">
           <PageIndicator currentPage={currentPage} />
-          <PageRouter currentPage={currentPage} />
+          <PageTransition currentPage={currentPage}>
+            <PageRouter currentPage={currentPage} />
+          </PageTransition>
         </main>
       </div>
     </div>
