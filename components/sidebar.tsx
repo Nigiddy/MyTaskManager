@@ -72,22 +72,22 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-[#FFE8D6] shadow-lg
+        fixed inset-y-0 left-0 z-50 w-64 glass-nav
         transform transition-transform duration-300 ease-in-out
         lg:relative lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#FFE8D6]">
+        <div className="flex items-center justify-between p-4 border-b border-white/20">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#FF9F43] to-[#FF6B6B] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#FF9F43] to-[#FF6B6B] rounded-lg flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-sm">TM</span>
             </div>
             <div>
@@ -99,14 +99,14 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
             variant="ghost"
             size="sm"
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden hover:bg-gray-100"
+            className="lg:hidden glass-button hover:bg-white/20"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)]">
+        <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)] custom-scrollbar">
           {navigationItems.map((item) => {
             const Icon = item.icon
             const isActive = currentPage === item.id
@@ -123,7 +123,7 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
                   active:scale-95 touch-manipulation
                   ${isActive 
                     ? `bg-gradient-to-r ${item.color} text-white shadow-md` 
-                    : 'hover:bg-gray-50 text-[#333] hover:shadow-sm'
+                    : 'glass-card hover:bg-white/20 text-[#333] hover:shadow-sm'
                   }
                 `}
               >
@@ -149,7 +149,7 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
         </nav>
 
         {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#FFE8D6] bg-gray-50">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20 glass-panel rounded-t-2xl">
           <div className="text-center">
             <div className="text-xs text-[#666] mb-2">Current Page</div>
             <div className="text-sm font-medium text-[#333] capitalize">
@@ -164,7 +164,7 @@ export function Sidebar({ currentPage, onPageChange, sidebarOpen, setSidebarOpen
         variant="ghost"
         size="sm"
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-30 lg:hidden bg-white border border-[#FFE8D6] shadow-md hover:bg-gray-50 active:scale-95 touch-manipulation"
+        className="fixed top-4 left-4 z-30 lg:hidden glass-button hover:bg-white/20 active:scale-95 touch-manipulation"
       >
         <Menu className="h-5 w-5" />
       </Button>
