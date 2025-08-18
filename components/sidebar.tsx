@@ -11,15 +11,16 @@ import {
   Database,
   Menu,
   X,
-  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
 } from 'lucide-react';
-
-interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-}
+import { clsx } from 'clsx';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const navigationItems = [
   {
@@ -66,117 +67,158 @@ const navigationItems = [
   },
 ];
 
+type NavItemProps = {
+  item: (typeof navigationItems)[number];
+  isActive: boolean;
+  isCollapsed: boolean;
+  onClick: () => void;
+};
+
+function NavItem({ item, isActive, isCollapsed, onClick }: NavItemProps) {
+  const Icon = item.icon;
+  const content = (
+    <button
+      onClick={onClick}
+      className={clsx(
+        'group flex w-full items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 active:scale-95',
+        {
+          [`bg-gradient-to-r ${item.color} text-white shadow-lg`]: isActive,
+          'text-primary hover:bg-white/10 glass-card': !isActive,
+          'justify-center': isCollapsed,
+        }
+      )}
+    >
+      <Icon
+        className={clsx('h-5 w-5 flex-shrink-0', {
+          'text-white': isActive,
+          'text-secondary group-hover:text-primary': !isActive,
+        })}
+      />
+      {!isCollapsed && (
+        <span className="flex-grow truncate font-medium">{item.label}</span>
+      )}
+    </button>
+  );
+
+  if (isCollapsed) {
+    return (
+      <TooltipProvider delayDuration={100}>
+        <Tooltip>
+          <TooltipTrigger asChild>{content}</TooltipTrigger>
+          <TooltipContent side="right">
+            <p>{item.label}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return content;
+}
+
+type SidebarProps = {
+  currentPage: string;
+  onPageChange: (pageId: string) => void;
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+};
+
 export function Sidebar({
   currentPage,
   onPageChange,
   sidebarOpen,
   setSidebarOpen,
 }: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
     <>
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar Container */}
       <div
-        className={`
-        fixed inset-y-0 left-0 z-50 w-64 glass-nav
-        transform transition-transform duration-300 ease-in-out
-        lg:relative lg:translate-x-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}
+        className={clsx(
+          'fixed inset-y-0 left-0 z-50 flex h-full flex-col glass-nav transition-all duration-300 ease-in-out lg:relative',
+          {
+            'w-64': !isCollapsed,
+            'w-20': isCollapsed,
+            'translate-x-0': sidebarOpen,
+            '-translate-x-full lg:translate-x-0': !sidebarOpen,
+          }
+        )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/20">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-accent to-highlight rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-sm">TM</span>
+        <div className="flex items-center justify-between border-b border-white/20 p-4">
+          <div
+            className={clsx('flex items-center gap-2 overflow-hidden', {
+              'opacity-0': isCollapsed,
+            })}
+          >
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-accent to-highlight shadow-lg">
+              <span className="text-sm font-bold text-white">TM</span>
             </div>
-            <div>
-              <h1 className="font-bold text-lg text-primary">Task Master</h1>
-              <p className="text-xs text-secondary">Your Command Center</p>
+            <div className="transition-opacity">
+              <h1 className="whitespace-nowrap font-bold text-primary">
+                Task Master
+              </h1>
             </div>
           </div>
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden glass-button hover:bg-white/20"
+            className="flex-shrink-0 lg:hidden"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)] custom-scrollbar">
-          {navigationItems.map(item => {
-            const Icon = item.icon;
-            const isActive = currentPage === item.id;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onPageChange(item.id);
-                  setSidebarOpen(false); // Close sidebar on mobile after selection
-                }}
-                className={`
-                  w-full p-3 rounded-lg text-left transition-all duration-200
-                  active:scale-95 touch-manipulation
-                  ${
-                    isActive
-                      ? `bg-gradient-to-r ${item.color} text-white shadow-md`
-                      : 'glass-card hover:bg-white/20 text-primary hover:shadow-sm'
-                  }
-                `}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Icon
-                      className={`h-5 w-5 ${isActive ? 'text-white' : 'text-secondary'}`}
-                    />
-                    <div>
-                      <div
-                        className={`font-medium ${isActive ? 'text-white' : 'text-primary'}`}
-                      >
-                        {item.label}
-                      </div>
-                      <div
-                        className={`text-xs ${isActive ? 'text-white/80' : 'text-secondary'}`}
-                      >
-                        {item.description}
-                      </div>
-                    </div>
-                  </div>
-                  {isActive && <ChevronRight className="h-4 w-4 text-white" />}
-                </div>
-              </button>
-            );
-          })}
+        <nav className="flex-grow space-y-2 overflow-y-auto p-4 custom-scrollbar">
+          {navigationItems.map((item) => (
+            <NavItem
+              key={item.id}
+              item={item}
+              isActive={currentPage === item.id}
+              isCollapsed={isCollapsed}
+              onClick={() => {
+                onPageChange(item.id);
+                if (window.innerWidth < 1024) {
+                  setSidebarOpen(false);
+                }
+              }}
+            />
+          ))}
         </nav>
 
-        {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20 glass-panel rounded-t-2xl">
-          <div className="text-center">
-            <div className="text-xs text-secondary mb-2">Current Page</div>
-            <div className="text-sm font-medium text-primary capitalize">
-              {currentPage.replace('-', ' ')}
-            </div>
-          </div>
+        {/* Footer & Collapse Toggle */}
+        <div className="border-t border-white/20 p-4">
+          <Button
+            variant="ghost"
+            className="hidden w-full justify-center lg:flex"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            {isCollapsed ? (
+              <ChevronsRight className="h-5 w-5 text-secondary" />
+            ) : (
+              <ChevronsLeft className="h-5 w-5 text-secondary" />
+            )}
+          </Button>
         </div>
       </div>
 
       {/* Mobile Toggle Button */}
       <Button
         variant="ghost"
-        size="sm"
+        size="icon"
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-30 lg:hidden glass-button hover:bg-white/20 active:scale-95 touch-manipulation"
+        className="fixed top-4 left-4 z-30 lg:hidden glass-button"
       >
         <Menu className="h-5 w-5" />
       </Button>
