@@ -1,10 +1,15 @@
 // src/components/layout/QuickStats.tsx
 'use client';
 
-import { Target, TrendingUp } from 'lucide-react';
+import { Target, TrendingUp, LucideIcon } from 'lucide-react';
 
-// A single stat pill component for reusability
-function StatPill({ icon: Icon, label, value }) {
+type StatPillProps = {
+  icon: LucideIcon; // ✅ explicitly typed for lucide-react icons
+  label: string;
+  value: string | number;
+};
+
+function StatPill({ icon: Icon, label, value }: StatPillProps) {
   return (
     <div className="glass-card flex items-center rounded-full px-3 py-2">
       <Icon size={16} className="mr-2 text-accent" />
