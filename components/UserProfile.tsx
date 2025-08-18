@@ -20,8 +20,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const user = {
-  name: 'Alex Johnson',
-  role: 'Product Manager',
+  name: 'Gideon Papa',
+  role: 'Full-Stack Dev',
   avatarUrl: '/placeholder-user.jpg',
   initials: 'AJ',
   status: 'Peak Productivity',
@@ -33,7 +33,7 @@ export function UserProfile() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="group flex items-center space-x-3 p-2 hover:bg-white/20 glass-button"
+          className="group flex items-center space-x-3 rounded-full p-2 transition-colors duration-200 hover:bg-white/10"
         >
           <div className="hidden text-right lg:block">
             <p className="text-sm font-semibold text-primary">{user.name}</p>
@@ -52,9 +52,10 @@ export function UserProfile() {
         </Button>
       </DropdownMenuTrigger>
 
+      {/* --- REFINED DROPDOWN CONTENT --- */}
       <DropdownMenuContent
         align="end"
-        className="w-64 border-0 p-2 glass-card shadow-xl"
+        className="w-72 rounded-xl border border-slate-800 bg-[#161B22] p-2 text-white shadow-2xl"
       >
         <DropdownMenuLabel className="flex items-center space-x-3 p-2">
           <Avatar className="h-10 w-10">
@@ -64,28 +65,28 @@ export function UserProfile() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-bold text-primary">{user.name}</p>
-            <p className="text-xs text-secondary">{user.role}</p>
+            <p className="text-sm font-bold text-slate-50">{user.name}</p>
+            <p className="text-xs text-slate-400">{user.role}</p>
           </div>
         </DropdownMenuLabel>
         
-        <DropdownMenuSeparator className="bg-white/20" />
+        <DropdownMenuSeparator className="m-1 bg-slate-800" />
         
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer p-2 hover:bg-white/20">
-            <User className="mr-2 h-4 w-4 text-accent" />
+          <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-slate-300 focus:bg-slate-800 focus:text-white">
+            <User className="mr-2 h-4 w-4 text-slate-400" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer p-2 hover:bg-white/20">
-            <Settings className="mr-2 h-4 w-4 text-accent" />
+          <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-slate-300 focus:bg-slate-800 focus:text-white">
+            <Settings className="mr-2 h-4 w-4 text-slate-400" />
             <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         
-        <DropdownMenuSeparator className="bg-white/20" />
+        <DropdownMenuSeparator className="m-1 bg-slate-800" />
 
-        <DropdownMenuItem className="cursor-pointer p-2 focus:bg-red-500/50">
-          <LogOut className="mr-2 h-4 w-4 text-accent" />
+        <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-red-400 focus:bg-red-500/20 focus:text-red-300">
+          <LogOut className="mr-2 h-4 w-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
