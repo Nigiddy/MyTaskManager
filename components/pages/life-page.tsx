@@ -1,10 +1,10 @@
 'use client';
 
-import { LifeReminders } from '@/components/life-reminders';
-import { MicroWins } from '@/components/micro-wins';
-import { TodaysWin } from '@/components/todays-win';
+import { LifeReminders } from '@/components/features/LifeReminders';
+import { MicroWins } from '@/components/features/MicroWins';
+import { TodaysWin } from '@/components/features/TodaysWin';
 import { NotificationService } from '@/components/notification-service';
-import { WorkScheduleConfig } from '@/components/work-schedule-config';
+import { WorkScheduleConfig } from '@/components/features/WorkScheduleConfig';
 
 export function LifePage() {
   return (

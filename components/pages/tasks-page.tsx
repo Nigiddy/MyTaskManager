@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { TaskList } from '@/components/task-list';
+import { TaskList } from '@/components/features/TaskList';
 import { Calendar } from '@/components/calendar';
 import { MyTasks } from '@/components/my-tasks';
 import { AssignedTasks } from '@/components/assigned-tasks';
@@ -26,7 +26,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1],
+      ease: 'easeInOut' as const,
     },
   },
 };
@@ -107,7 +107,7 @@ export function TasksPage() {
             key={stat.label}
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.6 + index * 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: 0.6 + index * 0.1, duration: 0.4, ease: 'easeInOut' as const }}
             className="glass-card p-5 text-center"
           >
             <div

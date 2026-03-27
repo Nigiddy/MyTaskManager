@@ -86,7 +86,7 @@ export function MyTasks() {
     <motion.div
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: 0.2, ease: 'easeInOut' as const }}
       className="glass-card p-5"
     >
       <div className="flex items-center justify-between mb-5">
@@ -114,7 +114,7 @@ export function MyTasks() {
               transition={{
                 duration: 0.3,
                 delay: 0.3 + index * 0.08,
-                ease: [0.22, 1, 0.36, 1],
+                ease: 'easeInOut' as const,
               }}
               whileHover={{ x: 4, transition: { duration: 0.2 } }}
               className="p-4 bg-white/[0.03] rounded-xl border border-white/[0.06] hover:border-white/15 hover:bg-white/[0.05] transition-all duration-300 cursor-pointer group"
@@ -143,7 +143,7 @@ export function MyTasks() {
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${task.progress}%` }}
-                      transition={{ duration: 0.8, delay: 0.5 + index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.8, delay: 0.5 + index * 0.1, ease: 'easeInOut' as const }}
                       className={`h-full rounded-full bg-gradient-to-r ${categoryStyles.bg}`}
                     />
                   </div>

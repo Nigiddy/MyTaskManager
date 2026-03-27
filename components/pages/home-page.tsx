@@ -5,7 +5,7 @@ import { WelcomeCard } from '@/components/welcome-card';
 import { StatsCards } from '@/components/stats-cards';
 import { TimeGreeting } from '@/components/time-greeting';
 import { DailyQuote } from '@/components/daily-quote';
-import { QuickActions } from '@/components/quick-actions';
+import { QuickActions } from '@/components/features/QuickActions';
 import { InlineAmbientMessage } from '@/components/ambient-messages';
 import { Home, Sparkles, Smartphone } from 'lucide-react';
 
@@ -27,7 +27,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1],
+      ease: 'easeInOut' as const,
     },
   },
 };

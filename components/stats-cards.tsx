@@ -73,7 +73,7 @@ function StatCard({
       transition={{
         duration: 0.4,
         delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
+        ease: 'easeInOut' as const,
       }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className="glass-card p-5"

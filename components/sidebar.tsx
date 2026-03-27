@@ -93,7 +93,7 @@ function NavItem({ item, isActive, isCollapsed, onClick, index }: NavItemProps) 
       transition={{
         duration: 0.3,
         delay: index * 0.05,
-        ease: [0.22, 1, 0.36, 1],
+        ease: 'easeInOut' as const,
       }}
       whileHover={{ scale: 1.02, x: 4 }}
       whileTap={{ scale: 0.98 }}
@@ -234,7 +234,7 @@ export function Sidebar({
         }}
         transition={{
           duration: 0.3,
-          ease: [0.22, 1, 0.36, 1],
+          ease: 'easeInOut' as const,
         }}
         className={clsx(
           'fixed inset-y-0 left-0 z-50 flex h-full flex-col m-4 lg:relative lg:m-0 lg:translate-x-0',

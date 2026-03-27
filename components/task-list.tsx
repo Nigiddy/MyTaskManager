@@ -204,7 +204,7 @@ export function TaskList() {
     <motion.div
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, ease: 'easeInOut' as const }}
       className="glass-card p-5"
     >
       <div className="flex items-center justify-between mb-5">
@@ -235,7 +235,7 @@ export function TaskList() {
               transition={{
                 duration: 0.3,
                 delay: index * 0.05,
-                ease: [0.22, 1, 0.36, 1],
+                ease: 'easeInOut' as const,
               }}
               layout
               className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 cursor-pointer group ${
@@ -319,7 +319,7 @@ export function TaskList() {
             animate={{
               width: `${(tasks.filter(t => t.completed).length / tasks.length) * 100}%`,
             }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: 'easeInOut' as const }}
           />
         </div>
       </motion.div>
