@@ -1,6 +1,6 @@
 'use client';
 
-import { DataInput } from '@/components/data-input';
+import { DataInput } from '@/components/features/DataInput';
 
 export function DataPage() {
   return (

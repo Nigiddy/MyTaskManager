@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Header } from '@/components/header';
 import { Sidebar } from '@/components/sidebar';
 import { PageRouter } from '@/components/page-router';
@@ -17,35 +18,67 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Tech Theme Background */}
+      {/* Enhanced Background */}
       <div className="fixed inset-0 pointer-events-none">
-        {/* Main deep charcoal background */}
-        <div className="absolute inset-0 bg-[#1A1A1A]"></div>
-
-        {/* Subtle tech accent shapes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-accent to-highlight rounded-full opacity-10 blur-xl animate-float"></div>
-        <div
-          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-highlight to-accent rounded-full opacity-15 blur-lg animate-float"
-          style={{ animationDelay: '1s' }}
-        ></div>
-        <div
-          className="absolute bottom-32 left-1/4 w-40 h-40 bg-gradient-to-r from-accent to-highlight rounded-full opacity-12 blur-xl animate-float"
-          style={{ animationDelay: '2s' }}
-        ></div>
-        <div
-          className="absolute bottom-20 right-1/3 w-28 h-28 bg-gradient-to-r from-highlight to-accent rounded-full opacity-10 blur-lg animate-float"
-          style={{ animationDelay: '0.5s' }}
-        ></div>
-
-        {/* Subtle tech grid pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-20"></div>
+        {/* Base gradient background */}
+        <div className="absolute inset-0 bg-[#0f0f12]" />
+        
+        {/* Subtle mesh gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(76,201,240,0.08)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(162,155,254,0.06)_0%,_transparent_50%)]" />
+        
+        {/* Floating orbs with refined animation */}
+        <motion.div
+          animate={{
+            y: [0, -15, 0],
+            opacity: [0.08, 0.12, 0.08],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="absolute top-20 left-[10%] w-64 h-64 bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] rounded-full blur-[100px]"
+        />
+        <motion.div
+          animate={{
+            y: [0, 20, 0],
+            opacity: [0.06, 0.1, 0.06],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 1,
+          }}
+          className="absolute bottom-20 right-[15%] w-80 h-80 bg-gradient-to-br from-[#a29bfe] to-[#4cc9f0] rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            y: [0, -10, 0],
+            x: [0, 10, 0],
+            opacity: [0.05, 0.08, 0.05],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 2,
+          }}
+          className="absolute top-1/2 left-1/3 w-48 h-48 bg-gradient-to-br from-[#10b981] to-[#4cc9f0] rounded-full blur-[80px]"
+        />
+        
+        {/* Subtle noise texture overlay */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }} />
       </div>
 
       {/* Content Layer */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col min-h-screen">
         <Header />
 
-        <div className="flex">
+        <div className="flex flex-1">
           <Sidebar
             currentPage={currentPage}
             onPageChange={handlePageChange}
@@ -53,7 +86,7 @@ export function Dashboard() {
             setSidebarOpen={setSidebarOpen}
           />
 
-          <main className="flex-1 padding-responsive transition-all duration-300">
+          <main className="flex-1 px-4 pb-8 lg:px-8 transition-all duration-300">
             <PageIndicator currentPage={currentPage} />
             <PageTransition currentPage={currentPage}>
               <PageRouter currentPage={currentPage} />

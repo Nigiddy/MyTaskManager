@@ -1,11 +1,12 @@
-// src/components/layout/UserProfile.tsx
 'use client';
 
+import { motion } from 'framer-motion';
 import {
   ChevronDown,
   LogOut,
   Settings,
   User,
+  Sparkles,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,7 @@ const user = {
   name: 'Gideon Papa',
   role: 'Full-Stack Dev',
   avatarUrl: '/placeholder-user.jpg',
-  initials: 'AJ',
+  initials: 'GP',
   status: 'Peak Productivity',
 };
 
@@ -31,62 +32,70 @@ export function UserProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="group flex items-center space-x-3 rounded-full p-2 transition-colors duration-200 hover:bg-white/10"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
         >
-          <div className="hidden text-right lg:block">
-            <p className="text-sm font-semibold text-primary">{user.name}</p>
-            <p className="text-xs font-medium text-accent">{user.status}</p>
-          </div>
-          <Avatar className="h-10 w-10 border-2 border-white/30">
-            <AvatarImage src={user.avatarUrl} />
-            <AvatarFallback className="bg-gradient-to-br from-[#FF9F43] to-[#FF7F50] text-lg font-bold text-white">
-              {user.initials}
-            </AvatarFallback>
-          </Avatar>
-          <ChevronDown
-            size={18}
-            className="text-secondary transition-transform duration-200 group-data-[state=open]:rotate-180"
-          />
-        </Button>
+          <Button
+            variant="ghost"
+            className="group flex items-center gap-3 rounded-xl p-2 pr-3 transition-all duration-300 hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08]"
+          >
+            <Avatar className="h-9 w-9 border-2 border-[#4cc9f0]/30">
+              <AvatarImage src={user.avatarUrl} />
+              <AvatarFallback className="bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] text-sm font-display font-bold text-white">
+                {user.initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="hidden text-left lg:block">
+              <p className="text-sm font-semibold text-white">{user.name}</p>
+              <p className="text-xs text-[#4cc9f0] flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />
+                {user.status}
+              </p>
+            </div>
+            <ChevronDown
+              size={16}
+              className="text-white/40 transition-transform duration-200 group-data-[state=open]:rotate-180"
+            />
+          </Button>
+        </motion.div>
       </DropdownMenuTrigger>
 
-      {/* --- REFINED DROPDOWN CONTENT --- */}
       <DropdownMenuContent
         align="end"
-        className="w-72 rounded-xl border border-slate-800 bg-[#161B22] p-2 text-white shadow-2xl"
+        className="w-64 rounded-xl border border-white/10 bg-[#16161a]/95 backdrop-blur-xl p-2 text-white shadow-2xl shadow-black/50"
       >
-        <DropdownMenuLabel className="flex items-center space-x-3 p-2">
-          <Avatar className="h-10 w-10">
+        <DropdownMenuLabel className="flex items-center gap-3 p-3">
+          <Avatar className="h-10 w-10 border-2 border-[#4cc9f0]/30">
             <AvatarImage src={user.avatarUrl} />
-            <AvatarFallback className="bg-gradient-to-br from-[#FF9F43] to-[#FF7F50] font-bold text-white">
+            <AvatarFallback className="bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] font-display font-bold text-white">
               {user.initials}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-bold text-slate-50">{user.name}</p>
-            <p className="text-xs text-slate-400">{user.role}</p>
+            <p className="text-sm font-display font-semibold text-white">{user.name}</p>
+            <p className="text-xs text-white/50">{user.role}</p>
           </div>
         </DropdownMenuLabel>
         
-        <DropdownMenuSeparator className="m-1 bg-slate-800" />
+        <DropdownMenuSeparator className="my-1 bg-white/[0.08]" />
         
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-slate-300 focus:bg-slate-800 focus:text-white">
-            <User className="mr-2 h-4 w-4 text-slate-400" />
+          <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors">
+            <User className="mr-2.5 h-4 w-4 text-white/50" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-slate-300 focus:bg-slate-800 focus:text-white">
-            <Settings className="mr-2 h-4 w-4 text-slate-400" />
+          <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors">
+            <Settings className="mr-2.5 h-4 w-4 text-white/50" />
             <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         
-        <DropdownMenuSeparator className="m-1 bg-slate-800" />
+        <DropdownMenuSeparator className="my-1 bg-white/[0.08]" />
 
-        <DropdownMenuItem className="cursor-pointer rounded-md p-2 text-red-400 focus:bg-red-500/20 focus:text-red-300">
-          <LogOut className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-red-400 focus:bg-red-500/10 focus:text-red-300 transition-colors">
+          <LogOut className="mr-2.5 h-4 w-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
