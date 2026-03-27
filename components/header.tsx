@@ -1,6 +1,6 @@
-// src/components/layout/Header.tsx
 'use client';
 
+import { motion } from 'framer-motion';
 import { SearchBar } from './SearchBar';
 import { QuickStats } from './QuickStats';
 import { NotificationBell } from './NotificationBell';
@@ -8,13 +8,19 @@ import { UserProfile } from './UserProfile';
 
 export function Header() {
   return (
-    <header className="glass-panel flex h-20 items-center mx-4 mt-4 mb-6 px-6">
+    <motion.header
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="glass-panel flex h-20 items-center mx-4 mt-4 mb-6 px-6"
+    >
       <SearchBar />
-      <div className="ml-auto flex items-center space-x-6">
+      <div className="ml-auto flex items-center gap-4">
         <QuickStats />
+        <div className="h-8 w-px bg-white/10 hidden md:block" />
         <NotificationBell />
         <UserProfile />
       </div>
-    </header>
+    </motion.header>
   );
 }
