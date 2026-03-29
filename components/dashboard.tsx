@@ -10,6 +10,7 @@ import { PageTransition } from '@/components/page-transition';
 
 export function Dashboard() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
@@ -44,6 +45,8 @@ export function Dashboard() {
           <Sidebar
             currentPage={currentPage}
             onPageChange={handlePageChange}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
           />
 
           <main className="flex-1 px-4 pb-24 lg:pb-8 lg:px-8 transition-all duration-300">
