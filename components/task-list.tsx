@@ -202,20 +202,20 @@ export function TaskList() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' as const }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' as const }}
       className="glass-card p-5"
     >
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <ListTodo className="w-5 h-5 text-[#4cc9f0]" />
-          <h2 className="font-display font-semibold text-lg text-white">YOUR DAILY POWER ROUTINE</h2>
+          <h2 className="font-display font-semibold text-lg text-white">Your Daily Power Routine</h2>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-white/40 hover:text-white hover:bg-white/10"
+          className="text-xs text-white/60 hover:text-white hover:bg-white/10"
         >
           View All <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
@@ -230,12 +230,12 @@ export function TaskList() {
           return (
             <motion.div
               key={task.id}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{
-                duration: 0.3,
-                delay: index * 0.05,
-                ease: 'easeInOut' as const,
+                duration: 0.25,
+                delay: index * 0.03,
+                ease: 'easeOut' as const,
               }}
               layout
               className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 cursor-pointer group ${
@@ -284,7 +284,7 @@ export function TaskList() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-xs text-white/30">{task.time}</span>
+                  <span className="text-xs text-white/50">{task.time}</span>
                   <span
                     className="px-2 py-0.5 text-xs font-medium rounded-md"
                     style={{
@@ -306,10 +306,10 @@ export function TaskList() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.3 }}
         className="mt-5 flex items-center justify-between text-sm"
       >
-        <span className="text-white/40">
+        <span className="text-white/60">
           {tasks.filter(t => t.completed).length} of {tasks.length} completed
         </span>
         <div className="w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">

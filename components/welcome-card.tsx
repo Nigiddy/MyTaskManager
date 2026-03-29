@@ -6,9 +6,9 @@ import { Sparkles } from 'lucide-react';
 export function WelcomeCard() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, ease: 'easeInOut' as const }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' as const }}
       className="glass-card p-6 relative overflow-hidden"
     >
       {/* Subtle gradient overlay */}
@@ -18,9 +18,9 @@ export function WelcomeCard() {
         <div className="flex items-center gap-4">
           {/* Avatar with gradient ring */}
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: 'spring', stiffness: 300 }}
             className="relative"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] blur-md opacity-50" />
@@ -31,9 +31,9 @@ export function WelcomeCard() {
           
           <div>
             <motion.h2
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
+              transition={{ delay: 0.15, duration: 0.3 }}
               className="font-display text-2xl font-bold text-white mb-1 tracking-tight"
             >
               Ready to Build Something Amazing?
@@ -41,8 +41,8 @@ export function WelcomeCard() {
             <motion.p
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-              className="text-white/60 text-base"
+              transition={{ delay: 0.3, duration: 0.3 }}
+              className="text-white/70 text-base"
             >
               Your daily grind fuels your dreams. Let&apos;s make today count.
             </motion.p>
@@ -50,12 +50,12 @@ export function WelcomeCard() {
         </div>
         
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
           className="hidden md:block text-right flex-shrink-0"
         >
-          <div className="flex items-center gap-2 text-white/40 text-sm mb-1">
+          <div className="flex items-center gap-2 text-white/60 text-sm mb-1">
             <Sparkles className="w-4 h-4" />
             <span>Today&apos;s Focus</span>
           </div>

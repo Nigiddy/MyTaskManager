@@ -88,12 +88,12 @@ function NavItem({ item, isActive, isCollapsed, onClick, index }: NavItemProps) 
   const content = (
     <motion.button
       onClick={onClick}
-      initial={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{
-        duration: 0.3,
-        delay: index * 0.05,
-        ease: 'easeInOut' as const,
+        duration: 0.2,
+        delay: index * 0.03,
+        ease: 'easeOut' as const,
       }}
       whileHover={{ scale: 1.02, x: 4 }}
       whileTap={{ scale: 0.98 }}
@@ -165,7 +165,7 @@ function NavItem({ item, isActive, isCollapsed, onClick, index }: NavItemProps) 
             >
               {item.label}
             </span>
-            <span className="text-xs text-white/40 truncate">
+            <span className="text-xs text-white/50 truncate">
               {item.description}
             </span>
           </motion.div>

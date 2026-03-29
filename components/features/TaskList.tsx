@@ -105,9 +105,9 @@ export function TaskList() {
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <ListTodo className="w-5 h-5 text-[#4cc9f0]" />
-          <h2 className="font-display font-semibold text-lg text-white">YOUR DAILY POWER ROUTINE</h2>
+          <h2 className="font-display font-semibold text-lg text-white">Your Daily Power Routine</h2>
         </div>
-        <Button variant="ghost" size="sm" className="text-xs text-white/40 hover:text-white hover:bg-white/10">
+        <Button variant="ghost" size="sm" className="text-xs text-white/60 hover:text-white hover:bg-white/10">
           View All <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -118,7 +118,7 @@ export function TaskList() {
       </div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
         className="mt-5 flex items-center justify-between text-sm">
-        <span className="text-white/40">{completedCount} of {tasks.length} completed</span>
+        <span className="text-white/60">{completedCount} of {tasks.length} completed</span>
         <div className="w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
           <motion.div className="h-full bg-gradient-to-r from-[#4cc9f0] to-[#a29bfe] rounded-full"
             initial={{ width: 0 }} animate={{ width: `${completionPercent}%` }}

@@ -22,7 +22,7 @@ export function StatsCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <StatCard
-        title="CODING SESSIONS"
+        title="Coding Sessions"
         value="95%"
         trend="+7.2%"
         trendUp={true}
@@ -32,7 +32,7 @@ export function StatsCards() {
         index={0}
       />
       <StatCard
-        title="BUSINESS TASKS"
+        title="Business Tasks"
         value="89%"
         trend="+8.5%"
         trendUp={true}
@@ -68,23 +68,23 @@ function StatCard({
 }: StatCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        delay: index * 0.1,
-        ease: 'easeInOut' as const,
+        duration: 0.3,
+        delay: index * 0.05,
+        ease: 'easeOut' as const,
       }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={{ y: -2, transition: { duration: 0.15 } }}
       className="glass-card p-5"
     >
       <div className="mb-3">
-        <p className="caption-text text-white/40 mb-1">{title}</p>
+        <p className="text-xs font-medium text-white/60 mb-1">{title}</p>
         <div className="flex items-baseline gap-2">
           <motion.h3
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 + index * 0.1, type: 'spring', stiffness: 200 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 + index * 0.05 }}
             className="font-display text-3xl font-bold text-white"
           >
             {value}
@@ -102,7 +102,7 @@ function StatCard({
             {trend}
           </span>
         </div>
-        <p className="text-xs text-white/30 mt-1">{subtitle}</p>
+        <p className="text-xs text-white/50 mt-1">{subtitle}</p>
       </div>
       <div className="h-16 -mx-2">
         <LineChart
