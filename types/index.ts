@@ -8,7 +8,7 @@
 
 export type Priority = 'Low' | 'Medium' | 'High';
 
-export type Task = {
+export interface Task {
   id: number;
   name: string;
   time?: string;
@@ -16,7 +16,27 @@ export type Task = {
   category: string;
   icon: React.ElementType;
   completed: boolean;
-};
+}
+
+// "My Focus Areas" mini task list
+export interface FocusTask {
+  id: number;
+  title: string;
+  category: string;
+  priority: Priority;
+  progress: number;
+}
+
+// "Assigned Tasks" business outreach list
+export type AssignedTaskStatus = 'Pending' | 'In Progress' | 'Completed';
+
+export interface AssignedTask {
+  id: number;
+  title: string;
+  client: string;
+  status: AssignedTaskStatus;
+  priority: Priority;
+}
 
 // ─── Habit Streaks ────────────────────────────────────────────────────────────
 
@@ -103,29 +123,71 @@ export interface TimerSettings {
 
 // ─── Performance Analytics ────────────────────────────────────────────────────
 
-export type ProductivityData = {
+export interface ProductivityData {
   hour: number;
   focusScore: number;
   tasksCompleted: number;
   deepWorkMinutes: number;
-};
+}
 
-export type WeeklyMetric = {
+export interface WeeklyMetric {
   week: string;
   productivity: number;
   focusTime: number;
   tasksCompleted: number;
   habitsMaintained: number;
-};
+}
 
-export type FocusSession = {
+export interface FocusSession {
   id: number;
   startTime: string;
   duration: number;
   task: string;
   focusScore: number;
   interruptions: number;
-};
+}
+
+export interface StatSeriesPoint {
+  name: string;
+  value: number;
+}
+
+export interface CaseTypeBreakdownItem {
+  name: string;
+  value: number;
+  color: string;
+  target: number;
+}
+
+export type BusinessMetricChangeType = 'increase' | 'decrease';
+
+export interface BusinessMetric {
+  id: number;
+  name: string;
+  // Displayed as currency already (e.g. "$2,450")
+  value: string;
+  change: number;
+  changeType: BusinessMetricChangeType;
+  target: string;
+  progress: number;
+  category: 'Revenue' | 'Clients' | 'Growth' | 'Brand';
+}
+
+export interface ClientPipelineStage {
+  stage: string;
+  count: number;
+  value: number;
+  conversionRate: number;
+  // Tailwind class (e.g. "bg-blue-500")
+  color: string;
+}
+
+// ─── Analytics Summary ──────────────────────────────────────────────────────
+export interface AnalyticsStat {
+  label: string;
+  value: number;
+  change?: number;
+}
 
 // ─── Learning Progress ────────────────────────────────────────────────────────
 
@@ -144,7 +206,7 @@ export type Skill = {
 
 export type ProjectStatus = 'Completed' | 'In Progress' | 'Planned';
 
-export type Project = {
+export interface Project {
   id: number;
   name: string;
   description: string;
@@ -154,7 +216,7 @@ export type Project = {
   githubUrl?: string;
   liveUrl?: string;
   category: string;
-};
+}
 
 export type ResourceType = 'Course' | 'Tutorial' | 'Documentation' | 'Challenge';
 export type ResourceDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
@@ -176,6 +238,14 @@ export interface LifeReminder {
   text: string;
   category: string;
   priority: 'low' | 'medium' | 'high';
+  createdAt: Date;
+}
+
+// ─── Generic Notifications ───────────────────────────────────────────────
+export interface Notification {
+  id: string;
+  message: string;
+  read: boolean;
   createdAt: Date;
 }
 
