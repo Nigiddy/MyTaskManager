@@ -1,15 +1,36 @@
 import { ChevronRight, Clock, Target } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { BarChart } from '@/components/ui/chart';
+import type { CaseTypeBreakdownItem } from '@/types';
+import { getStats } from '@/lib/api/analytics';
 
 export function CaseTypeBreakdown() {
-  const data = [
-    { name: 'Coding & Dev', value: 35, color: '#4CAF50', target: 40 },
-    { name: 'Business Strategy', value: 25, color: '#FF9F43', target: 30 },
-    { name: 'Fitness & Wellness', value: 20, color: '#2196F3', target: 20 },
-    { name: 'Learning & Growth', value: 15, color: '#9C27B0', target: 15 },
-    { name: 'Trading & Analysis', value: 5, color: '#F44336', target: 5 },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<CaseTypeBreakdownItem[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+        if (cancelled) return;
+        // TODO: replace with real breakdown data from backend.
+        setData([]);
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load breakdown.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
@@ -26,19 +47,36 @@ export function CaseTypeBreakdown() {
 
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 h-32">
-          <BarChart
-            data={data}
-            categories={['value']}
-            colors={data.map(item => item.color)}
-            showLegend={false}
-            showXAxis={true}
-            showYAxis={false}
-            layout="horizontal"
-          />
+          {error ? (
+            <div className="h-full flex items-center justify-center text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
+              {error}
+            </div>
+          ) : (
+            <BarChart
+              data={isLoading ? [] : data}
+              categories={['value']}
+              colors={(isLoading ? [] : data).map(item => item.color)}
+              showLegend={false}
+              showXAxis={true}
+              showYAxis={false}
+              layout="horizontal"
+            />
+          )}
         </div>
 
         <div className="md:ml-4 mt-4 md:mt-0 space-y-3">
-          {data.map(item => (
+          {isLoading && (
+            <div className="p-2 bg-white rounded-lg border border-[#FFE8D6]">
+              <div className="h-4 w-40 bg-[#FFE8D6] rounded mb-2" />
+              <div className="h-3 w-24 bg-[#FFE8D6] rounded" />
+            </div>
+          )}
+          {!isLoading && !error && data.length === 0 && (
+            <div className="p-2 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              No breakdown data yet.
+            </div>
+          )}
+          {!isLoading && !error && data.map(item => (
             <div
               key={item.name}
               className="flex items-center justify-between p-2 bg-white rounded-lg border border-[#FFE8D6]"

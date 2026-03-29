@@ -1,12 +1,36 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { LifeReminders } from '@/components/features/LifeReminders';
 import { MicroWins } from '@/components/features/MicroWins';
 import { TodaysWin } from '@/components/features/TodaysWin';
 import { NotificationService } from '@/components/notification-service';
 import { WorkScheduleConfig } from '@/components/features/WorkScheduleConfig';
+import { getStats } from '@/lib/api/analytics';
 
 export function LifePage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load wellness stats.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="space-y-4">
       {/* Page Header */}
@@ -46,21 +70,26 @@ export function LifePage() {
       {/* Wellness Tracking */}
       <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
         <h3 className="font-semibold text-[#333] mb-3">Wellness Tracker</h3>
+        {error && (
+          <div className="p-2 mb-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-xl font-bold text-green-600">8</div>
+            <div className="text-xl font-bold text-green-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-green-600">Water Glasses</div>
           </div>
           <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-xl font-bold text-blue-600">45m</div>
+            <div className="text-xl font-bold text-blue-600">{isLoading ? '—' : '0m'}</div>
             <div className="text-xs text-blue-600">Exercise</div>
           </div>
           <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-xl font-bold text-purple-600">7h</div>
+            <div className="text-xl font-bold text-purple-600">{isLoading ? '—' : '0h'}</div>
             <div className="text-xs text-purple-600">Sleep</div>
           </div>
           <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-xl font-bold text-orange-600">3</div>
+            <div className="text-xl font-bold text-orange-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-orange-600">Social Calls</div>
           </div>
         </div>
@@ -113,7 +142,7 @@ export function LifePage() {
             <div className="w-20 bg-emerald-100 rounded-full h-2">
               <div
                 className="bg-emerald-500 h-2 rounded-full"
-                style={{ width: '70%' }}
+                style={{ width: isLoading ? '0%' : '0%' }}
               ></div>
             </div>
           </div>
@@ -124,7 +153,7 @@ export function LifePage() {
             <div className="w-20 bg-emerald-100 rounded-full h-2">
               <div
                 className="bg-emerald-500 h-2 rounded-full"
-                style={{ width: '80%' }}
+                style={{ width: isLoading ? '0%' : '0%' }}
               ></div>
             </div>
           </div>
@@ -133,7 +162,7 @@ export function LifePage() {
             <div className="w-20 bg-emerald-100 rounded-full h-2">
               <div
                 className="bg-emerald-500 h-2 rounded-full"
-                style={{ width: '100%' }}
+                style={{ width: isLoading ? '0%' : '0%' }}
               ></div>
             </div>
           </div>

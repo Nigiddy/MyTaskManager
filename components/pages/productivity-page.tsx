@@ -1,11 +1,35 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { PomodoroTimer } from '@/components/features/PomodoroTimer';
 import { HabitStreaks } from '@/components/features/HabitStreaks';
 import { MicroWins } from '@/components/features/MicroWins';
 import { QuickActions } from '@/components/features/QuickActions';
+import { getStats } from '@/lib/api/analytics';
 
 export function ProductivityPage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load productivity insights.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="space-y-4">
       {/* Page Header */}
@@ -37,21 +61,26 @@ export function ProductivityPage() {
         <h3 className="font-semibold text-[#333] mb-3">
           Today's Productivity Insights
         </h3>
+        {error && (
+          <div className="p-2 mb-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">4</div>
+            <div className="text-2xl font-bold text-blue-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-[#666]">Focus Sessions</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">2h 30m</div>
+            <div className="text-2xl font-bold text-green-600">{isLoading ? '—' : '0h 0m'}</div>
             <div className="text-xs text-[#666]">Deep Work</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">85%</div>
+            <div className="text-2xl font-bold text-purple-600">{isLoading ? '—' : '0%'}</div>
             <div className="text-xs text-[#666]">Focus Score</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">6/7</div>
+            <div className="text-2xl font-bold text-orange-600">{isLoading ? '—' : '0/0'}</div>
             <div className="text-xs text-[#666]">Habits Done</div>
           </div>
         </div>

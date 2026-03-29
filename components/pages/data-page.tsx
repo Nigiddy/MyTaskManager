@@ -1,8 +1,32 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { DataInput } from '@/components/features/DataInput';
+import { getStats } from '@/lib/api/analytics';
 
 export function DataPage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load data statistics.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="space-y-4">
       {/* Page Header */}
@@ -53,21 +77,26 @@ export function DataPage() {
       {/* Data Statistics */}
       <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
         <h3 className="font-semibold text-[#333] mb-3">Data Statistics</h3>
+        {error && (
+          <div className="p-2 mb-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-xl font-bold text-blue-600">156</div>
+            <div className="text-xl font-bold text-blue-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-blue-600">Total Entries</div>
           </div>
           <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-xl font-bold text-green-600">24</div>
+            <div className="text-xl font-bold text-green-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-green-600">This Week</div>
           </div>
           <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-xl font-bold text-purple-600">4</div>
+            <div className="text-xl font-bold text-purple-600">{isLoading ? '—' : 0}</div>
             <div className="text-xs text-purple-600">Categories</div>
           </div>
           <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-xl font-bold text-orange-600">85%</div>
+            <div className="text-xl font-bold text-orange-600">{isLoading ? '—' : '0%'}</div>
             <div className="text-xs text-orange-600">Completion</div>
           </div>
         </div>
@@ -81,19 +110,19 @@ export function DataPage() {
         <div className="space-y-2 text-sm text-emerald-700">
           <div className="flex justify-between">
             <span>• Coding Sessions</span>
-            <span className="font-medium">12 entries this week</span>
+            <span className="font-medium">{isLoading ? '—' : '0 entries this week'}</span>
           </div>
           <div className="flex justify-between">
             <span>• Business Outreach</span>
-            <span className="font-medium">8 contacts made</span>
+            <span className="font-medium">{isLoading ? '—' : '0 contacts made'}</span>
           </div>
           <div className="flex justify-between">
             <span>• Fitness & Wellness</span>
-            <span className="font-medium">15 activities logged</span>
+            <span className="font-medium">{isLoading ? '—' : '0 activities logged'}</span>
           </div>
           <div className="flex justify-between">
             <span>• Learning Progress</span>
-            <span className="font-medium">18 hours tracked</span>
+            <span className="font-medium">{isLoading ? '—' : '0 hours tracked'}</span>
           </div>
         </div>
       </div>

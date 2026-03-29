@@ -30,7 +30,7 @@ function getCategoryMeta(id: string) {
 }
 
 export function MicroWins() {
-  const { wins, addWin, deleteWin, todayWins, highImpactWins } = useMicroWins();
+  const { wins, isLoading, error, addWin, deleteWin, todayWins, highImpactWins } = useMicroWins();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
@@ -89,7 +89,22 @@ export function MicroWins() {
       )}
 
       <div className="space-y-3">
-        {wins.map(win => {
+        {isLoading && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            Loading…
+          </div>
+        )}
+        {!isLoading && error && (
+          <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+        {!isLoading && !error && wins.length === 0 && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            No micro-wins yet — add your first one.
+          </div>
+        )}
+        {!isLoading && !error && wins.map(win => {
           const cat = getCategoryMeta(win.category);
           const CatIcon = cat.icon;
           return (
@@ -120,10 +135,9 @@ export function MicroWins() {
       <div className="mt-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
         <div className="text-xs text-yellow-700 mb-2 font-medium">Quick Win Ideas:</div>
         <div className="flex flex-wrap gap-2">
-          {['Did 10 squats', 'Read 5 pages', 'Called a friend', 'Meditated 5 min', 'Drank water', 'Went outside'].map(s => (
-            <button key={s} onClick={() => { setTitle(s); setDesc(`Quick win: ${s.toLowerCase()}`); setCategory('discipline'); setImpact('low'); setShowForm(true); }}
-              className="text-xs px-2 py-1 bg-white rounded border border-yellow-200 text-yellow-700 hover:bg-yellow-50 transition-colors">{s}</button>
-          ))}
+          <div className="text-xs text-yellow-700">
+            Ideas will appear once suggestions are connected.
+          </div>
         </div>
       </div>
     </div>

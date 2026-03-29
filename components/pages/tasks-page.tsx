@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
 import { TaskList } from '@/components/features/TaskList';
 import { Calendar } from '@/components/calendar';
 import { MyTasks } from '@/components/my-tasks';
@@ -8,6 +9,8 @@ import { AssignedTasks } from '@/components/assigned-tasks';
 import { CaseTypeBreakdown } from '@/components/case-type-breakdown';
 import { CheckSquare, Plus, CalendarDays, BarChart3, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getTasks } from '@/lib/api/tasks';
+import { getProjects } from '@/lib/api/projects';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -33,6 +36,45 @@ const itemVariants = {
 };
 
 export function TasksPage() {
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
+  const [activeTasks, setActiveTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
+  const [activeProjects, setActiveProjects] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoadingStats(true);
+        setStatsError(null);
+        const [tasks, projects] = await Promise.all([getTasks(), getProjects()]);
+        if (cancelled) return;
+        setActiveTasks(tasks.filter(t => !t.completed).length);
+        setCompletedTasks(tasks.filter(t => t.completed).length);
+        setActiveProjects(projects.filter(p => p.status === 'In Progress').length);
+      } catch {
+        if (cancelled) return;
+        setStatsError('Failed to load task stats.');
+      } finally {
+        if (!cancelled) setIsLoadingStats(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const statCards = useMemo(
+    () => [
+      { label: 'Active Tasks', value: activeTasks, color: '#4cc9f0' },
+      { label: 'Completed', value: completedTasks, color: '#10b981' },
+      { label: 'Projects Active', value: activeProjects, color: '#8b5cf6' },
+    ],
+    [activeProjects, activeTasks, completedTasks]
+  );
+
   return (
     <motion.div
       variants={containerVariants}
@@ -109,11 +151,20 @@ export function TasksPage() {
 
       {/* Task Statistics */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { label: 'Active Tasks', value: '12', color: '#4cc9f0' },
-          { label: 'Completed Today', value: '8', color: '#10b981' },
-          { label: 'Projects Active', value: '3', color: '#8b5cf6' },
-        ].map((stat, index) => (
+        {isLoadingStats && (
+          <div className="glass-card p-5 text-center">
+            <div className="h-8 w-16 bg-white/10 rounded mx-auto mb-2" />
+            <div className="h-4 w-24 bg-white/10 rounded mx-auto" />
+          </div>
+        )}
+
+        {!isLoadingStats && statsError && (
+          <div className="glass-card p-5 text-center text-sm text-red-200 border border-red-500/20 bg-red-500/5">
+            {statsError}
+          </div>
+        )}
+
+        {!isLoadingStats && !statsError && statCards.map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 8 }}

@@ -7,32 +7,41 @@
 import { useState, useEffect } from 'react';
 import type { LifeReminder } from '@/types';
 
-const defaultReminders: LifeReminder[] = [
-  { id: '1', text: 'Text her before she texts you 😉', category: 'Relationships', priority: 'medium', createdAt: new Date() },
-  { id: '2', text: "Call Mum — it's been 3 days", category: 'Family', priority: 'high', createdAt: new Date() },
-  { id: '3', text: "Go outside. You're not a vampire", category: 'Health', priority: 'medium', createdAt: new Date() },
-  { id: '4', text: 'Drink some water 💧', category: 'Health', priority: 'low', createdAt: new Date() },
-  { id: '5', text: 'Take a deep breath and stretch', category: 'Wellness', priority: 'low', createdAt: new Date() },
-];
-
 export function useLifeReminders() {
-  const [reminders, setReminders] = useState<LifeReminder[]>(defaultReminders);
+  const [reminders, setReminders] = useState<LifeReminder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('lifeReminders');
-    if (saved) {
-      try {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const saved = localStorage.getItem('lifeReminders');
+      if (saved) {
         const parsed = JSON.parse(saved);
-        setReminders(parsed.map((r: LifeReminder) => ({ ...r, createdAt: new Date(r.createdAt) })));
-      } catch { /* use defaults */ }
+        setReminders(
+          (parsed as LifeReminder[]).map((r: LifeReminder) => ({
+            ...r,
+            createdAt: new Date(r.createdAt),
+          }))
+        );
+      } else {
+        setReminders([]);
+      }
+    } catch {
+      setError('Failed to load reminders.');
+      setReminders([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   // Persist on every change
   useEffect(() => {
+    if (isLoading) return;
     localStorage.setItem('lifeReminders', JSON.stringify(reminders));
-  }, [reminders]);
+  }, [isLoading, reminders]);
 
   const addReminder = (text: string, category: string, priority: LifeReminder['priority']) => {
     if (!text.trim()) return;
@@ -50,5 +59,5 @@ export function useLifeReminders() {
     setReminders(prev => prev.filter(r => r.id !== id));
   };
 
-  return { reminders, addReminder, removeReminder };
+  return { reminders, isLoading, error, addReminder, removeReminder };
 }

@@ -2,57 +2,46 @@
 
 import { motion } from 'framer-motion';
 import { Plus, Target } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
-type Task = {
-  id: number;
-  title: string;
-  category: string;
-  priority: 'High' | 'Medium' | 'Low';
-  progress: number;
-};
+import type { FocusTask } from '@/types';
+import { getTasks } from '@/lib/api/tasks';
 
 export function MyTasks() {
-  const tasks: Task[] = [
-    {
-      id: 1,
-      title: 'Complete WiFi Billing System MVP',
-      category: 'Projects',
-      priority: 'High',
-      progress: 75,
-    },
-    {
-      id: 2,
-      title: 'Python Data Structures Mastery',
-      category: 'Learning',
-      priority: 'Medium',
-      progress: 60,
-    },
-    {
-      id: 3,
-      title: 'Dem Man Brand Strategy Session',
-      category: 'Business',
-      priority: 'High',
-      progress: 40,
-    },
-    {
-      id: 4,
-      title: 'Portfolio Website Redesign',
-      category: 'Design',
-      priority: 'Medium',
-      progress: 30,
-    },
-    {
-      id: 5,
-      title: 'Trading Strategy Optimization',
-      category: 'Trading',
-      priority: 'Low',
-      progress: 85,
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<FocusTask[]>([]);
 
-  const getPriorityStyles = (priority: string) => {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const base = await getTasks();
+        if (cancelled) return;
+        const focus: FocusTask[] = base.map(t => ({
+          id: t.id,
+          title: t.name,
+          category: t.category,
+          priority: t.priority,
+          progress: t.completed ? 100 : 0,
+        }));
+        setTasks(focus);
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load focus areas.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const getPriorityStyles = (priority: FocusTask['priority']) => {
     switch (priority) {
       case 'High':
         return 'bg-red-500/15 text-red-400 border-red-500/30';
@@ -65,7 +54,7 @@ export function MyTasks() {
     }
   };
 
-  const getCategoryStyles = (category: string) => {
+  const getCategoryStyles = (category: FocusTask['category']) => {
     switch (category) {
       case 'Projects':
         return { bg: 'from-orange-500 to-amber-500', icon: 'bg-orange-500/20' };
@@ -104,7 +93,26 @@ export function MyTasks() {
       </div>
 
       <div className="space-y-3">
-        {tasks.map((task, index) => {
+        {isLoading && (
+          <div className="p-4 bg-white/[0.03] rounded-xl border border-white/[0.06]">
+            <div className="h-4 w-48 bg-white/10 rounded mb-2" />
+            <div className="h-3 w-32 bg-white/10 rounded" />
+          </div>
+        )}
+
+        {!isLoading && error && (
+          <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-sm text-red-200">
+            {error}
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.length === 0 && (
+          <div className="p-4 bg-white/[0.03] rounded-xl border border-white/[0.06] text-sm text-white/60">
+            No focus areas yet.
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.map((task, index) => {
           const categoryStyles = getCategoryStyles(task.category);
           return (
             <motion.div

@@ -22,7 +22,7 @@ const categoryIcon: Record<string, string> = {
 };
 
 export function TodaysWin() {
-  const { wins, celebratingWinId, showConfetti, celebrateWin, addNewWin, highImpactWins, totalTimeSpent } = useTodaysWins();
+  const { wins, isLoading, error, celebratingWinId, showConfetti, celebrateWin, addNewWin, highImpactWins, totalTimeSpent } = useTodaysWins();
 
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] relative overflow-hidden">
@@ -52,14 +52,29 @@ export function TodaysWin() {
         ].map(s => (
           <div key={s.label} className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-center">
             <div className="flex items-center justify-center mb-2"><s.icon size={16} className={`${s.color} mr-1`} /><span className="text-xs text-[#666]">{s.label}</span></div>
-            <div className="text-2xl font-bold text-[#333]">{s.value}</div>
+            <div className="text-2xl font-bold text-[#333]">{isLoading ? '—' : s.value}</div>
             <div className="text-xs text-[#666]">{s.sub}</div>
           </div>
         ))}
       </div>
 
       <div className="space-y-3">
-        {wins.map(win => (
+        {isLoading && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            Loading…
+          </div>
+        )}
+        {!isLoading && error && (
+          <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+        {!isLoading && !error && wins.length === 0 && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            No wins yet — add one when you achieve something today.
+          </div>
+        )}
+        {!isLoading && !error && wins.map(win => (
           <div key={win.id}
             className={`p-4 rounded-lg border transition-all ${celebratingWinId === win.id ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-300 shadow-lg scale-105' : 'bg-white border-[#FFE8D6] hover:border-[#FF9F43]'}`}>
             <div className="flex items-start justify-between mb-3">
@@ -95,7 +110,7 @@ export function TodaysWin() {
         <div className="text-3xl mb-2">🏆</div>
         <div className="text-lg font-bold text-[#FF9F43] mb-2">You&apos;re Crushing It Today!</div>
         <div className="text-sm text-[#666] mb-3">
-          {wins.length > 0 ? `You've accomplished ${wins.length} amazing things today!` : 'Ready to start building your success story?'}
+          {isLoading ? 'Loading…' : wins.length > 0 ? `You've accomplished ${wins.length} amazing things today!` : 'Ready to start building your success story?'}
         </div>
         <div className="flex items-center justify-center space-x-4 text-xs text-[#666]">
           <div className="flex items-center"><CheckCircle size={14} className="mr-1 text-green-600" /><span>Stay Consistent</span></div>
