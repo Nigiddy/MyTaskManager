@@ -97,7 +97,7 @@ function TaskRow({ task, index, onToggle }: { task: Task; index: number; onToggl
 }
 
 export function TaskList() {
-  const { tasks, toggleComplete, completedCount, completionPercent } = useTasks();
+  const { tasks, isLoading, error, toggleComplete, completedCount, completionPercent } = useTasks();
 
   return (
     <motion.div initial={{ opacity: 0, y: 16, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -112,8 +112,27 @@ export function TaskList() {
         </Button>
       </div>
       <div className="space-y-2">
-        {tasks.map((task, i) => (
-          <TaskRow key={task.id} task={task} index={i} onToggle={() => toggleComplete(task.id)} />
+        {isLoading && (
+          <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <div className="h-4 w-40 rounded bg-white/10 mb-2" />
+            <div className="h-3 w-28 rounded bg-white/10" />
+          </div>
+        )}
+
+        {!isLoading && error && (
+          <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-sm text-red-200">
+            {error}
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.length === 0 && (
+          <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] text-sm text-white/60">
+            No tasks yet — create your first one.
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.map((task, i) => (
+          <TaskRow key={task.id} task={task} index={i} onToggle={() => void toggleComplete(task.id)} />
         ))}
       </div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}

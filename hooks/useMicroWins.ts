@@ -2,18 +2,42 @@
  * hooks/useMicroWins.ts
  * Owns micro-wins list state: add, delete, and derived stats.
  */
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { MicroWin } from '@/types';
 
-const defaultWins: MicroWin[] = [
-  { id: 1, title: 'Did 20 push-ups between code sessions', description: 'Stayed active and energized during long coding hours', category: 'fitness', impact: 'medium', completedAt: new Date(), tags: ['fitness', 'discipline', 'energy'] },
-  { id: 2, title: "Didn't touch social media till lunch", description: 'Maintained focus and productivity in the morning', category: 'discipline', impact: 'high', completedAt: new Date(), tags: ['focus', 'productivity', 'self-control'] },
-  { id: 3, title: 'Drank 8 glasses of water today', description: 'Stayed hydrated throughout the day', category: 'health', impact: 'medium', completedAt: new Date(), tags: ['health', 'hydration', 'wellness'] },
-  { id: 4, title: 'Called Mum and had a great chat', description: 'Maintained important relationships', category: 'relationships', impact: 'high', completedAt: new Date(), tags: ['family', 'connection', 'balance'] },
-];
-
 export function useMicroWins() {
-  const [wins, setWins] = useState<MicroWin[]>(defaultWins);
+  const [wins, setWins] = useState<MicroWin[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const saved = localStorage.getItem('microWins');
+      if (saved) {
+        const parsed = JSON.parse(saved) as MicroWin[];
+        setWins(
+          parsed.map(w => ({
+            ...w,
+            completedAt: new Date(w.completedAt),
+          }))
+        );
+      } else {
+        setWins([]);
+      }
+    } catch {
+      setWins([]);
+      setError('Failed to load micro-wins.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+    localStorage.setItem('microWins', JSON.stringify(wins));
+  }, [isLoading, wins]);
 
   const addWin = (title: string, description: string, category: string, impact: MicroWin['impact']) => {
     const win: MicroWin = {
@@ -33,8 +57,15 @@ export function useMicroWins() {
   };
 
   const today = new Date();
-  const todayWins = wins.filter(w => new Date(w.completedAt).toDateString() === today.toDateString()).length;
-  const highImpactWins = wins.filter(w => w.impact === 'high').length;
+  const todayWins = useMemo(
+    () =>
+      wins.filter(w => new Date(w.completedAt).toDateString() === today.toDateString()).length,
+    [today, wins]
+  );
+  const highImpactWins = useMemo(
+    () => wins.filter(w => w.impact === 'high').length,
+    [wins]
+  );
 
-  return { wins, addWin, deleteWin, todayWins, highImpactWins };
+  return { wins, isLoading, error, addWin, deleteWin, todayWins, highImpactWins };
 }

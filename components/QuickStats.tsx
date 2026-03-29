@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Target, TrendingUp, type LucideIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getStats } from '@/lib/api/analytics';
 
 type StatPillProps = {
   icon: LucideIcon;
@@ -35,10 +37,49 @@ function StatPill({ icon: Icon, label, value, color, index }: StatPillProps) {
 }
 
 export function QuickStats() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load quick stats.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="hidden items-center gap-3 lg:flex">
-      <StatPill icon={Target} value={5} label="Goals" color="#4cc9f0" index={0} />
-      <StatPill icon={TrendingUp} value="85%" label="Productivity" color="#10b981" index={1} />
+      <StatPill
+        icon={Target}
+        value={isLoading ? '—' : 0}
+        label="Goals"
+        color="#4cc9f0"
+        index={0}
+      />
+      <StatPill
+        icon={TrendingUp}
+        value={isLoading ? '—' : '0%'}
+        label="Productivity"
+        color="#10b981"
+        index={1}
+      />
+      {error && (
+        <div className="text-xs text-red-200">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

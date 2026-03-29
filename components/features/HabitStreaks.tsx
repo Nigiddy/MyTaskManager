@@ -56,7 +56,7 @@ function HabitCard({ habit, onToggle }: { habit: Habit; onToggle: () => void }) 
 }
 
 export function HabitStreaks() {
-  const { habits, toggleHabitCompletion, totalStreaks, completedToday, completionRate } = useHabits();
+  const { habits, isLoading, error, toggleHabitCompletion, totalStreaks, completedToday, completionRate } = useHabits();
 
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
@@ -81,7 +81,22 @@ export function HabitStreaks() {
       </div>
 
       <div className="space-y-3">
-        {habits.map(habit => (
+        {isLoading && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            Loading…
+          </div>
+        )}
+        {!isLoading && error && (
+          <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+        {!isLoading && !error && habits.length === 0 && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            No habits yet.
+          </div>
+        )}
+        {!isLoading && !error && habits.map(habit => (
           <HabitCard key={habit.id} habit={habit} onToggle={() => toggleHabitCompletion(habit.id)} />
         ))}
       </div>

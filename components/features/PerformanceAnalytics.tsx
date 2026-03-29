@@ -5,47 +5,13 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BarChart3, TrendingUp, Clock, Target, Activity, Zap, Brain } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import type { ProductivityData, WeeklyMetric, FocusSession } from '@/types';
-
-const productivityData: ProductivityData[] = [
-  { hour: 4, focusScore: 95, tasksCompleted: 2, deepWorkMinutes: 90 },
-  { hour: 5, focusScore: 90, tasksCompleted: 1, deepWorkMinutes: 60 },
-  { hour: 6, focusScore: 88, tasksCompleted: 3, deepWorkMinutes: 180 },
-  { hour: 7, focusScore: 85, tasksCompleted: 2, deepWorkMinutes: 120 },
-  { hour: 8, focusScore: 82, tasksCompleted: 1, deepWorkMinutes: 60 },
-  { hour: 9, focusScore: 78, tasksCompleted: 2, deepWorkMinutes: 90 },
-  { hour: 10, focusScore: 75, tasksCompleted: 1, deepWorkMinutes: 60 },
-  { hour: 11, focusScore: 72, tasksCompleted: 2, deepWorkMinutes: 90 },
-  { hour: 12, focusScore: 65, tasksCompleted: 1, deepWorkMinutes: 30 },
-  { hour: 13, focusScore: 70, tasksCompleted: 2, deepWorkMinutes: 60 },
-  { hour: 14, focusScore: 75, tasksCompleted: 3, deepWorkMinutes: 90 },
-  { hour: 15, focusScore: 80, tasksCompleted: 2, deepWorkMinutes: 120 },
-  { hour: 16, focusScore: 78, tasksCompleted: 2, deepWorkMinutes: 90 },
-  { hour: 17, focusScore: 75, tasksCompleted: 1, deepWorkMinutes: 60 },
-  { hour: 18, focusScore: 70, tasksCompleted: 2, deepWorkMinutes: 60 },
-  { hour: 19, focusScore: 68, tasksCompleted: 1, deepWorkMinutes: 45 },
-  { hour: 20, focusScore: 65, tasksCompleted: 2, deepWorkMinutes: 60 },
-  { hour: 21, focusScore: 60, tasksCompleted: 1, deepWorkMinutes: 30 },
-];
-
-const weeklyMetrics: WeeklyMetric[] = [
-  { week: 'Week 1', productivity: 85, focusTime: 42, tasksCompleted: 45, habitsMaintained: 6 },
-  { week: 'Week 2', productivity: 88, focusTime: 45, tasksCompleted: 48, habitsMaintained: 7 },
-  { week: 'Week 3', productivity: 82, focusTime: 40, tasksCompleted: 42, habitsMaintained: 5 },
-  { week: 'Week 4', productivity: 90, focusTime: 48, tasksCompleted: 52, habitsMaintained: 7 },
-];
-
-const focusSessions: FocusSession[] = [
-  { id: 1, startTime: '4:00 AM', duration: 90, task: 'Full-Stack Development', focusScore: 95, interruptions: 0 },
-  { id: 2, startTime: '6:00 AM', duration: 120, task: 'Python Learning', focusScore: 88, interruptions: 1 },
-  { id: 3, startTime: '9:00 AM', duration: 60, task: 'Business Strategy', focusScore: 82, interruptions: 2 },
-  { id: 4, startTime: '2:00 PM', duration: 90, task: 'Sales Outreach', focusScore: 78, interruptions: 3 },
-];
+import { getStats } from '@/lib/api/analytics';
 
 function getHeatmapColor(score: number) {
   if (score >= 90) return 'bg-green-600 text-white';
@@ -64,10 +30,53 @@ function formatHour(h: number) {
 
 export function PerformanceAnalytics() {
   const [activeTab, setActiveTab] = useState<'heatmap' | 'sessions' | 'weekly'>('heatmap');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [productivityData, setProductivityData] = useState<ProductivityData[]>([]);
+  const [weeklyMetrics, setWeeklyMetrics] = useState<WeeklyMetric[]>([]);
+  const [focusSessions, setFocusSessions] = useState<FocusSession[]>([]);
 
-  const avgFocus = Math.round(productivityData.reduce((s, d) => s + d.focusScore, 0) / productivityData.length);
-  const totalTasks = productivityData.reduce((s, d) => s + d.tasksCompleted, 0);
-  const totalDeepWork = productivityData.reduce((s, d) => s + d.deepWorkMinutes, 0);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+        if (cancelled) return;
+        // TODO: replace with real analytics datasets from backend.
+        setProductivityData([]);
+        setWeeklyMetrics([]);
+        setFocusSessions([]);
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load performance analytics.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const avgFocus = useMemo(() => {
+    if (productivityData.length === 0) return 0;
+    return Math.round(
+      productivityData.reduce((s, d) => s + d.focusScore, 0) /
+        productivityData.length
+    );
+  }, [productivityData]);
+
+  const totalTasks = useMemo(
+    () => productivityData.reduce((s, d) => s + d.tasksCompleted, 0),
+    [productivityData]
+  );
+
+  const totalDeepWork = useMemo(
+    () => productivityData.reduce((s, d) => s + d.deepWorkMinutes, 0),
+    [productivityData]
+  );
 
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
@@ -87,7 +96,7 @@ export function PerformanceAnalytics() {
         ].map(s => (
           <div key={s.label} className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-center">
             <s.icon size={18} className={`${s.color} mx-auto mb-1`} />
-            <div className="text-xl font-bold text-[#333]">{s.value}</div>
+            <div className="text-xl font-bold text-[#333]">{isLoading ? '—' : s.value}</div>
             <div className="text-xs text-[#666]">{s.label}</div>
           </div>
         ))}
@@ -106,14 +115,31 @@ export function PerformanceAnalytics() {
       {activeTab === 'heatmap' && (
         <div>
           <h3 className="text-sm font-medium text-[#666] mb-3">Hourly Productivity Heatmap</h3>
-          <div className="grid grid-cols-6 gap-1 mb-3">
-            {productivityData.map(d => (
-              <div key={d.hour} className={`aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer hover:scale-110 transition-transform ${getHeatmapColor(d.focusScore)}`}>
-                <div className="text-xs font-bold">{d.focusScore}%</div>
-                <div className="text-xs opacity-75">{formatHour(d.hour)}</div>
-              </div>
-            ))}
-          </div>
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+              {error}
+            </div>
+          )}
+          {!error && isLoading && (
+            <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              Loading…
+            </div>
+          )}
+          {!error && !isLoading && productivityData.length === 0 && (
+            <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              No productivity data yet.
+            </div>
+          )}
+          {!error && !isLoading && productivityData.length > 0 && (
+            <div className="grid grid-cols-6 gap-1 mb-3">
+              {productivityData.map(d => (
+                <div key={d.hour} className={`aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer hover:scale-110 transition-transform ${getHeatmapColor(d.focusScore)}`}>
+                  <div className="text-xs font-bold">{d.focusScore}%</div>
+                  <div className="text-xs opacity-75">{formatHour(d.hour)}</div>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex items-center justify-center space-x-4 text-xs text-[#666]">
             {[
               { color: 'bg-red-300', label: '<60%' }, { color: 'bg-orange-300', label: '60-70%' },
@@ -131,7 +157,12 @@ export function PerformanceAnalytics() {
 
       {activeTab === 'sessions' && (
         <div className="space-y-3">
-          {focusSessions.map(session => (
+          {!isLoading && !error && focusSessions.length === 0 && (
+            <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              No focus sessions yet.
+            </div>
+          )}
+          {!isLoading && !error && focusSessions.map(session => (
             <div key={session.id} className="p-3 bg-white rounded-lg border border-[#FFE8D6]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-[#333]">{session.task}</span>
@@ -152,7 +183,12 @@ export function PerformanceAnalytics() {
 
       {activeTab === 'weekly' && (
         <div className="space-y-3">
-          {weeklyMetrics.map(week => (
+          {!isLoading && !error && weeklyMetrics.length === 0 && (
+            <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              No weekly metrics yet.
+            </div>
+          )}
+          {!isLoading && !error && weeklyMetrics.map(week => (
             <div key={week.week} className="p-3 bg-white rounded-lg border border-[#FFE8D6]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-[#333]">{week.week}</span>

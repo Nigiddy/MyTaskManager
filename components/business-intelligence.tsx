@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   TrendingUp,
   Users,
@@ -13,138 +13,55 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-
-type BusinessMetric = {
-  id: number;
-  name: string;
-  value: string;
-  change: number;
-  changeType: 'increase' | 'decrease';
-  target: string;
-  progress: number;
-  category: 'Revenue' | 'Clients' | 'Growth' | 'Brand';
-};
-
-type ClientPipeline = {
-  stage: string;
-  count: number;
-  value: number;
-  conversionRate: number;
-  color: string;
-};
+import type { BusinessMetric, ClientPipelineStage } from '@/types';
+import { getStats } from '@/lib/api/analytics';
 
 export function BusinessIntelligence() {
-  const [metrics, setMetrics] = useState<BusinessMetric[]>([
-    {
-      id: 1,
-      name: 'WiFi Billing Revenue',
-      value: '$2,450',
-      change: 12.5,
-      changeType: 'increase',
-      target: '$3,000',
-      progress: 82,
-      category: 'Revenue',
-    },
-    {
-      id: 2,
-      name: 'Client Acquisition',
-      value: '8',
-      change: 25.0,
-      changeType: 'increase',
-      target: '12',
-      progress: 67,
-      category: 'Clients',
-    },
-    {
-      id: 3,
-      name: 'Dem Man Brand Reach',
-      value: '1,240',
-      change: 8.3,
-      changeType: 'increase',
-      target: '2,000',
-      progress: 62,
-      category: 'Brand',
-    },
-    {
-      id: 4,
-      name: 'Dicla Clothing Sales',
-      value: '$890',
-      change: -5.2,
-      changeType: 'decrease',
-      target: '$1,200',
-      progress: 74,
-      category: 'Revenue',
-    },
-    {
-      id: 5,
-      name: 'Discord Community Growth',
-      value: '156',
-      change: 18.7,
-      changeType: 'increase',
-      target: '200',
-      progress: 78,
-      category: 'Growth',
-    },
-    {
-      id: 6,
-      name: 'Portfolio Project Income',
-      value: '$1,680',
-      change: 22.1,
-      changeType: 'increase',
-      target: '$2,000',
-      progress: 84,
-      category: 'Revenue',
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<BusinessMetric[]>([]);
+  const [pipeline, setPipeline] = useState<ClientPipelineStage[]>([]);
 
-  const [pipeline, setPipeline] = useState<ClientPipeline[]>([
-    {
-      stage: 'Lead Generation',
-      count: 24,
-      value: 0,
-      conversionRate: 0,
-      color: 'bg-blue-500',
-    },
-    {
-      stage: 'Initial Contact',
-      count: 18,
-      value: 0,
-      conversionRate: 75,
-      color: 'bg-yellow-500',
-    },
-    {
-      stage: 'Demo/Pitch',
-      count: 12,
-      value: 0,
-      conversionRate: 67,
-      color: 'bg-orange-500',
-    },
-    {
-      stage: 'Negotiation',
-      count: 8,
-      value: 0,
-      conversionRate: 67,
-      color: 'bg-red-500',
-    },
-    {
-      stage: 'Closed Won',
-      count: 6,
-      value: 4200,
-      conversionRate: 75,
-      color: 'bg-green-500',
-    },
-  ]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getStats();
+        if (cancelled) return;
+        // TODO: replace with real business metrics + pipeline endpoints.
+        setMetrics([]);
+        setPipeline([]);
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load business intelligence.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const totalRevenue = metrics
-    .filter(m => m.category === 'Revenue')
-    .reduce(
-      (sum, m) => sum + parseFloat(m.value.replace('$', '').replace(',', '')),
-      0
-    );
+  const totalRevenue = useMemo(() => {
+    return metrics
+      .filter(m => m.category === 'Revenue')
+      .reduce((sum, m) => {
+        const n = Number(m.value.replace(/[^0-9.]/g, ''));
+        return sum + (Number.isFinite(n) ? n : 0);
+      }, 0);
+  }, [metrics]);
 
-  const totalClients = metrics
-    .filter(m => m.category === 'Clients')
-    .reduce((sum, m) => sum + parseInt(m.value), 0);
+  const totalClients = useMemo(() => {
+    return metrics
+      .filter(m => m.category === 'Clients')
+      .reduce((sum, m) => {
+        const n = Number(m.value.replace(/[^0-9.]/g, ''));
+        return sum + (Number.isFinite(n) ? n : 0);
+      }, 0);
+  }, [metrics]);
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -195,7 +112,7 @@ export function BusinessIntelligence() {
             <span className="text-xs text-[#666]">Total Revenue</span>
           </div>
           <div className="text-2xl font-bold text-[#333]">
-            ${totalRevenue.toLocaleString()}
+            {isLoading ? '—' : `$${totalRevenue.toLocaleString()}`}
           </div>
           <div className="text-xs text-[#666] mt-1">This Month</div>
         </div>
@@ -205,7 +122,7 @@ export function BusinessIntelligence() {
             <Users size={20} className="text-blue-600 mr-2" />
             <span className="text-xs text-[#666]">Active Clients</span>
           </div>
-          <div className="text-2xl font-bold text-[#333]">{totalClients}</div>
+          <div className="text-2xl font-bold text-[#333]">{isLoading ? '—' : totalClients}</div>
           <div className="text-xs text-[#666] mt-1">Current Month</div>
         </div>
 
@@ -214,14 +131,25 @@ export function BusinessIntelligence() {
             <Target size={20} className="text-orange-600 mr-2" />
             <span className="text-xs text-[#666]">Conversion Rate</span>
           </div>
-          <div className="text-2xl font-bold text-[#333]">68%</div>
+          <div className="text-2xl font-bold text-[#333]">{isLoading ? '—' : '0%'}</div>
           <div className="text-xs text-[#666] mt-1">Lead to Client</div>
         </div>
       </div>
 
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-4">
+          {error}
+        </div>
+      )}
+
       {/* Detailed Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {metrics.map(metric => (
+        {!isLoading && !error && metrics.length === 0 && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666] lg:col-span-2">
+            No business metrics yet.
+          </div>
+        )}
+        {!isLoading && !error && metrics.map(metric => (
           <div
             key={metric.id}
             className="p-3 bg-white rounded-lg border border-[#FFE8D6] hover:border-[#FF9F43] transition-colors"
@@ -266,7 +194,12 @@ export function BusinessIntelligence() {
       <div className="mb-4">
         <h3 className="font-medium text-[#333] mb-3">Client Pipeline</h3>
         <div className="space-y-3">
-          {pipeline.map((stage, index) => (
+          {!isLoading && !error && pipeline.length === 0 && (
+            <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+              No pipeline data yet.
+            </div>
+          )}
+          {!isLoading && !error && pipeline.map((stage, index) => (
             <div
               key={stage.stage}
               className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#FFE8D6]"
@@ -315,9 +248,11 @@ export function BusinessIntelligence() {
               Fitness
             </Badge>
           </div>
-          <div className="text-lg font-bold text-blue-700">1,240 followers</div>
+          <div className="text-lg font-bold text-blue-700">
+            {isLoading ? '—' : '0 followers'}
+          </div>
           <div className="text-xs text-blue-600 mt-1">
-            +8.3% this month • Gym partnerships growing
+            No brand analytics yet.
           </div>
         </div>
 
@@ -333,9 +268,11 @@ export function BusinessIntelligence() {
               Fashion
             </Badge>
           </div>
-          <div className="text-lg font-bold text-pink-700">$890 revenue</div>
+          <div className="text-lg font-bold text-pink-700">
+            {isLoading ? '—' : '$0 revenue'}
+          </div>
           <div className="text-xs text-pink-600 mt-1">
-            -5.2% this month • Need influencer strategy
+            No sales analytics yet.
           </div>
         </div>
       </div>

@@ -25,10 +25,8 @@ const priorityColor: Record<LifeReminder['priority'], string> = {
 
 const categoryIcon: Record<string, string> = { Relationships: '💕', Family: '👨‍👩‍👧‍👦', Health: '🏃‍♂️', Wellness: '🧘‍♂️', Social: '👥', Personal: '⭐' };
 
-const suggestions = ['Take a walk outside', 'Call a friend', 'Practice gratitude', 'Do something creative', 'Connect with family', 'Learn something new'];
-
 export function LifeReminders() {
-  const { reminders, addReminder, removeReminder } = useLifeReminders();
+  const { reminders, isLoading, error, addReminder, removeReminder } = useLifeReminders();
   const [showForm, setShowForm] = useState(false);
   const [text, setText] = useState('');
   const [category, setCategory] = useState('Personal');
@@ -78,7 +76,26 @@ export function LifeReminders() {
       )}
 
       <div className="space-y-3">
-        {reminders.map(r => (
+        {isLoading && (
+          <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
+            <div className="h-4 w-40 bg-[#FFE8D6] rounded mb-2" />
+            <div className="h-3 w-24 bg-[#FFE8D6] rounded" />
+          </div>
+        )}
+
+        {!isLoading && error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        {!isLoading && !error && reminders.length === 0 && (
+          <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm text-sm text-[#666]">
+            No reminders yet — add your first one.
+          </div>
+        )}
+
+        {!isLoading && !error && reminders.map(r => (
           <div key={r.id} className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -115,13 +132,9 @@ export function LifeReminders() {
       </div>
 
       <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <h3 className="font-semibold text-[#333] mb-3">💡 Quick Add Suggestions</h3>
-        <div className="grid grid-cols-2 gap-2">
-          {suggestions.map(s => (
-            <button key={s} onClick={() => { setText(s); setCategory('Personal'); setPriority('medium'); setShowForm(true); }}
-              className="p-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-white rounded border border-gray-200 transition-colors">{s}
-            </button>
-          ))}
+        <h3 className="font-semibold text-[#333] mb-1">💡 Quick Add</h3>
+        <div className="text-sm text-gray-600">
+          Suggestions will appear once recommendation data is connected.
         </div>
       </div>
     </div>

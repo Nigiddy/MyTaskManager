@@ -5,55 +5,46 @@ import {
   Target,
   TrendingUp,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
-type Task = {
-  id: number;
-  title: string;
-  client: string;
-  status: 'Pending' | 'In Progress' | 'Completed';
-  priority: 'High' | 'Medium' | 'Low';
-};
+import type { AssignedTask } from '@/types';
+import { getTasks } from '@/lib/api/tasks';
 
 export function AssignedTasks() {
-  const tasks: Task[] = [
-    {
-      id: 1,
-      title: 'Cybercafé WiFi Solution Pitch',
-      client: 'CyberNet Gaming',
-      status: 'In Progress',
-      priority: 'High',
-    },
-    {
-      id: 2,
-      title: 'Discord Community Bot Demo',
-      client: 'TechTraders',
-      status: 'Pending',
-      priority: 'Medium',
-    },
-    {
-      id: 3,
-      title: 'Portfolio Website Review',
-      client: 'Startup Incubator',
-      status: 'Completed',
-      priority: 'Low',
-    },
-    {
-      id: 4,
-      title: 'Dem Man Brand Partnership',
-      client: 'Local Gym Chain',
-      status: 'In Progress',
-      priority: 'High',
-    },
-    {
-      id: 5,
-      title: 'Dicla Clothing Marketing',
-      client: 'Fashion Influencer',
-      status: 'Pending',
-      priority: 'Medium',
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<AssignedTask[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        // TODO: replace with a real "assigned tasks" endpoint later.
+        // For now, we map general tasks into this view with minimal defaults.
+        const base = await getTasks();
+        if (cancelled) return;
+        const mapped: AssignedTask[] = base.map(t => ({
+          id: t.id,
+          title: t.name,
+          client: '',
+          status: t.completed ? 'Completed' : 'Pending',
+          priority: t.priority,
+        }));
+        setTasks(mapped);
+      } catch {
+        if (cancelled) return;
+        setError('Failed to load outreach tasks.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -95,7 +86,26 @@ export function AssignedTasks() {
       </div>
 
       <div className="space-y-3">
-        {tasks.map(task => (
+        {isLoading && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6]">
+            <div className="h-4 w-40 bg-[#FFE8D6] rounded mb-2" />
+            <div className="h-3 w-24 bg-[#FFE8D6] rounded" />
+          </div>
+        )}
+
+        {!isLoading && error && (
+          <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.length === 0 && (
+          <div className="p-3 bg-white rounded-lg border border-[#FFE8D6] text-sm text-[#666]">
+            No outreach tasks yet.
+          </div>
+        )}
+
+        {!isLoading && !error && tasks.map(task => (
           <div
             key={task.id}
             className="p-3 bg-white rounded-lg border border-[#FFE8D6] hover:border-[#FF9F43] transition-colors"
@@ -118,7 +128,7 @@ export function AssignedTasks() {
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-[#666] flex items-center">
                 <Users size={12} className="mr-1" />
-                {task.client}
+                {task.client || '—'}
               </span>
               <Badge
                 variant="outline"

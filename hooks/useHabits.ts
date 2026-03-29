@@ -2,19 +2,36 @@
  * hooks/useHabits.ts
  * Owns the habit tracking state and toggle action.
  */
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Habit } from '@/types';
 
-const initialHabits: Habit[] = [
-  { id: 1, name: '4 AM Wake-up', icon: '🌅', currentStreak: 7, longestStreak: 12, completedToday: true, category: 'Productivity' },
-  { id: 2, name: 'Morning Workout', icon: '💪', currentStreak: 5, longestStreak: 8, completedToday: true, category: 'Fitness' },
-  { id: 3, name: 'Coding Session', icon: '💻', currentStreak: 9, longestStreak: 15, completedToday: false, category: 'Learning' },
-  { id: 4, name: 'Business Strategy', icon: '🎯', currentStreak: 3, longestStreak: 6, completedToday: false, category: 'Business' },
-  { id: 5, name: 'Evening Reflection', icon: '📝', currentStreak: 4, longestStreak: 7, completedToday: false, category: 'Productivity' },
-];
-
 export function useHabits() {
-  const [habits, setHabits] = useState<Habit[]>(initialHabits);
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const saved = localStorage.getItem('habits');
+      if (saved) {
+        setHabits(JSON.parse(saved) as Habit[]);
+      } else {
+        setHabits([]);
+      }
+    } catch {
+      setHabits([]);
+      setError('Failed to load habits.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+    localStorage.setItem('habits', JSON.stringify(habits));
+  }, [habits, isLoading]);
 
   const toggleHabitCompletion = (habitId: number) => {
     setHabits(prev =>
@@ -26,9 +43,26 @@ export function useHabits() {
     );
   };
 
-  const totalStreaks = habits.reduce((sum, h) => sum + h.currentStreak, 0);
-  const completedToday = habits.filter(h => h.completedToday).length;
-  const completionRate = Math.round((completedToday / habits.length) * 100);
+  const totalStreaks = useMemo(
+    () => habits.reduce((sum, h) => sum + h.currentStreak, 0),
+    [habits]
+  );
+  const completedToday = useMemo(
+    () => habits.filter(h => h.completedToday).length,
+    [habits]
+  );
+  const completionRate = useMemo(() => {
+    if (habits.length === 0) return 0;
+    return Math.round((completedToday / habits.length) * 100);
+  }, [completedToday, habits.length]);
 
-  return { habits, toggleHabitCompletion, totalStreaks, completedToday, completionRate };
+  return {
+    habits,
+    isLoading,
+    error,
+    toggleHabitCompletion,
+    totalStreaks,
+    completedToday,
+    completionRate,
+  };
 }
