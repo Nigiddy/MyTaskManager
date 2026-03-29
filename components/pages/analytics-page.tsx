@@ -1,8 +1,8 @@
 'use client';
 
-import { PerformanceAnalytics } from '@/components/performance-analytics';
+import { PerformanceAnalytics } from '@/components/features/PerformanceAnalytics';
 import { BusinessIntelligence } from '@/components/business-intelligence';
-import { LearningProgress } from '@/components/learning-progress';
+import { LearningProgress } from '@/components/features/LearningProgress';
 import { CaseTypeBreakdown } from '@/components/case-type-breakdown';
 
 export function AnalyticsPage() {

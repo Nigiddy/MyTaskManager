@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
   FileText,
@@ -10,9 +11,9 @@ import {
   Dumbbell,
   Palette,
   MessageSquare,
+  Check,
+  ListTodo,
 } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 type Priority = 'Low' | 'Medium' | 'High';
@@ -25,6 +26,43 @@ type Task = {
   icon: React.ElementType;
   completed: boolean;
 };
+
+// Custom animated checkbox component
+function AnimatedCheckbox({
+  checked,
+  onChange,
+  accentColor,
+}: {
+  checked: boolean;
+  onChange: () => void;
+  accentColor: string;
+}) {
+  return (
+    <motion.button
+      onClick={onChange}
+      className="relative flex-shrink-0 h-6 w-6 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent"
+      style={{
+        borderColor: checked ? accentColor : 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: checked ? accentColor : 'transparent',
+      }}
+      whileTap={{ scale: 0.9 }}
+    >
+      <AnimatePresence mode="wait">
+        {checked && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2, type: 'spring', stiffness: 500, damping: 30 }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
 
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([
@@ -66,7 +104,7 @@ export function TaskList() {
     },
     {
       id: 5,
-      name: 'Sales Outreach - Cybercafés',
+      name: 'Sales Outreach - Cybercafes',
       time: '2:30 PM - 4:00 PM',
       priority: 'Medium',
       category: 'Business',
@@ -128,102 +166,163 @@ export function TaskList() {
     );
   };
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryStyles = (category: string) => {
     switch (category) {
       case 'Fitness':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return { color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.3)' };
       case 'Coding':
-        return 'bg-green-100 text-green-700 border-green-200';
+        return { color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' };
       case 'Learning':
-        return 'bg-purple-100 text-purple-700 border-purple-200';
+        return { color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)' };
       case 'Projects':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return { color: '#f97316', bg: 'rgba(249, 115, 22, 0.15)', border: 'rgba(249, 115, 22, 0.3)' };
       case 'Business':
-        return 'bg-indigo-100 text-indigo-700 border-indigo-200';
+        return { color: '#6366f1', bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)' };
       case 'Design':
-        return 'bg-pink-100 text-pink-700 border-pink-200';
+        return { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.3)' };
       case 'Trading':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return { color: '#34d399', bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)' };
       case 'Personal':
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return { color: 'rgba(255, 255, 255, 0.6)', bg: 'rgba(255, 255, 255, 0.08)', border: 'rgba(255, 255, 255, 0.15)' };
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return { color: 'rgba(255, 255, 255, 0.6)', bg: 'rgba(255, 255, 255, 0.08)', border: 'rgba(255, 255, 255, 0.15)' };
+    }
+  };
+
+  const getPriorityStyles = (priority: Priority) => {
+    switch (priority) {
+      case 'Low':
+        return { color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' };
+      case 'Medium':
+        return { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)' };
+      case 'High':
+        return { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.3)' };
     }
   };
 
   return (
-    <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-lg">YOUR DAILY POWER ROUTINE</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' as const }}
+      className="glass-card p-5"
+    >
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <ListTodo className="w-5 h-5 text-[#4cc9f0]" />
+          <h2 className="font-display font-semibold text-lg text-white">Your Daily Power Routine</h2>
+        </div>
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-[#666] hover:text-[#333]"
+          className="text-xs text-white/60 hover:text-white hover:bg-white/10"
         >
-          View All <ChevronRight size={16} />
+          View All <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
 
-      <div className="space-y-3">
-        {tasks.map(task => {
+      <div className="space-y-2">
+        {tasks.map((task, index) => {
           const Icon = task.icon;
+          const categoryStyles = getCategoryStyles(task.category);
+          const priorityStyles = getPriorityStyles(task.priority);
+
           return (
-            <div
+            <motion.div
               key={task.id}
-              className={`flex items-center p-3 rounded-lg border transition-all ${
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.25,
+                delay: index * 0.03,
+                ease: 'easeOut' as const,
+              }}
+              layout
+              className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 cursor-pointer group ${
                 task.completed
-                  ? 'bg-green-50 border-green-200 opacity-75'
-                  : 'bg-white border-[#FFE8D6] hover:border-[#FF9F43]'
+                  ? 'bg-emerald-500/5 border-emerald-500/20'
+                  : 'bg-white/[0.02] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.04]'
               }`}
+              onClick={() => toggleTaskCompletion(task.id)}
             >
-              <Checkbox
+              <AnimatedCheckbox
                 checked={task.completed}
-                onCheckedChange={() => toggleTaskCompletion(task.id)}
-                className="border-[#FFD7BA] data-[state=checked]:bg-[#FF9F43] data-[state=checked]:border-[#FF9F43] mr-3"
+                onChange={() => toggleTaskCompletion(task.id)}
+                accentColor={categoryStyles.color}
               />
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#FFE8D6] mr-3">
-                <Icon size={16} className="text-[#FF9F43]" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}
+
+              <motion.div
+                className="flex items-center justify-center w-10 h-10 rounded-xl"
+                style={{ backgroundColor: categoryStyles.bg }}
+                animate={{ scale: task.completed ? 0.9 : 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Icon className="w-5 h-5" style={{ color: categoryStyles.color }} />
+              </motion.div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-3">
+                  <motion.span
+                    className={`font-medium text-sm truncate transition-all duration-300 ${
+                      task.completed
+                        ? 'text-white/40 line-through'
+                        : 'text-white group-hover:text-white/90'
+                    }`}
+                    animate={{ opacity: task.completed ? 0.5 : 1 }}
                   >
                     {task.name}
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className={`rounded-md font-normal text-xs ${getCategoryColor(task.category)}`}
+                  </motion.span>
+                  <span
+                    className="flex-shrink-0 px-2.5 py-1 text-xs font-medium rounded-md"
+                    style={{
+                      backgroundColor: categoryStyles.bg,
+                      color: categoryStyles.color,
+                      border: `1px solid ${categoryStyles.border}`,
+                    }}
                   >
                     {task.category}
-                  </Badge>
+                  </span>
                 </div>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-[#666]">{task.time}</span>
-                  <Badge
-                    variant="outline"
-                    className={`rounded-md font-normal text-xs ${
-                      task.priority === 'Low'
-                        ? 'bg-green-100 text-green-700 border-green-200'
-                        : ''
-                    } ${
-                      task.priority === 'Medium'
-                        ? 'bg-orange-100 text-orange-700 border-orange-200'
-                        : ''
-                    } ${
-                      task.priority === 'High'
-                        ? 'bg-red-100 text-red-700 border-red-200'
-                        : ''
-                    }`}
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className="text-xs text-white/50">{task.time}</span>
+                  <span
+                    className="px-2 py-0.5 text-xs font-medium rounded-md"
+                    style={{
+                      backgroundColor: priorityStyles.bg,
+                      color: priorityStyles.color,
+                      border: `1px solid ${priorityStyles.border}`,
+                    }}
                   >
                     {task.priority}
-                  </Badge>
+                  </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </div>
+
+      {/* Completed count */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="mt-5 flex items-center justify-between text-sm"
+      >
+        <span className="text-white/60">
+          {tasks.filter(t => t.completed).length} of {tasks.length} completed
+        </span>
+        <div className="w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-[#4cc9f0] to-[#a29bfe] rounded-full"
+            initial={{ width: 0 }}
+            animate={{
+              width: `${(tasks.filter(t => t.completed).length / tasks.length) * 100}%`,
+            }}
+            transition={{ duration: 0.5, ease: 'easeInOut' as const }}
+          />
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

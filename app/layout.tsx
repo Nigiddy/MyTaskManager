@@ -1,34 +1,41 @@
 import type React from 'react';
-import type { Metadata } from 'next';
-import { Inter, Poppins, Open_Sans } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Syne, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
-// Enhanced font configuration
-const inter = Inter({
+// Distinctive font pairing - Syne for headings, DM Sans for body
+const syne = Syne({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-syne',
   display: 'swap',
 });
 
-const poppins = Poppins({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-poppins',
+  variable: '--font-dm-sans',
   display: 'swap',
 });
 
-const openSans = Open_Sans({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-open-sans',
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Task Manager',
-  description: 'A soft UI task manager app',
+  title: 'Task Master | Your Personal Productivity Hub',
+  description: 'A sleek, modern task manager designed to help you build, learn, and scale your ambitions.',
   generator: 'v0.dev',
+};
+
+export const viewport: Viewport = {
+  themeColor: '#1A1A1A',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -37,9 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${poppins.variable} ${openSans.variable} font-sans`}
+        className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

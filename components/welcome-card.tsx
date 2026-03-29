@@ -1,27 +1,69 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
+
 export function WelcomeCard() {
   return (
-    <div className="bg-[#FFF8F3] rounded-xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center">
-          <div className="h-14 w-14 rounded-full bg-gradient-to-br from-[#FF9F43] to-[#FF7F50] flex items-center justify-center text-white font-bold text-lg shadow-lg">
-            PF
-          </div>
-          <div className="ml-4">
-            <h2 className="text-2xl font-bold text-[#333] mb-1">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' as const }}
+      className="glass-card p-6 relative overflow-hidden"
+    >
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#4cc9f0]/10 via-transparent to-[#a29bfe]/5 pointer-events-none" />
+      
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {/* Avatar with gradient ring */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: 'spring', stiffness: 300 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] blur-md opacity-50" />
+            <div className="relative h-14 w-14 rounded-full bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] flex items-center justify-center text-white font-display font-bold text-lg shadow-lg">
+              PF
+            </div>
+          </motion.div>
+          
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15, duration: 0.3 }}
+              className="font-display text-2xl font-bold text-white mb-1 tracking-tight"
+            >
               Ready to Build Something Amazing?
-            </h2>
-            <p className="text-[#666] text-base">
-              Your daily grind fuels your dreams. Let's make today count.
-            </p>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.3 }}
+              className="text-white/70 text-base"
+            >
+              Your daily grind fuels your dreams. Let&apos;s make today count.
+            </motion.p>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-sm text-[#999] mb-1">Today's Focus</div>
-          <div className="text-lg font-semibold text-[#FF9F43]">
-            Code • Build • Scale
+        
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+          className="hidden md:block text-right flex-shrink-0"
+        >
+          <div className="flex items-center gap-2 text-white/60 text-sm mb-1">
+            <Sparkles className="w-4 h-4" />
+            <span>Today&apos;s Focus</span>
           </div>
-        </div>
+          <div className="font-display font-semibold text-lg bg-gradient-to-r from-[#4cc9f0] to-[#a29bfe] bg-clip-text text-transparent">
+            Code - Build - Scale
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

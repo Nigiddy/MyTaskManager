@@ -1,9 +1,9 @@
 'use client';
 
-import { PomodoroTimer } from '@/components/pomodoro-timer';
-import { HabitStreaks } from '@/components/habit-streaks';
-import { MicroWins } from '@/components/micro-wins';
-import { QuickActions } from '@/components/quick-actions';
+import { PomodoroTimer } from '@/components/features/PomodoroTimer';
+import { HabitStreaks } from '@/components/features/HabitStreaks';
+import { MicroWins } from '@/components/features/MicroWins';
+import { QuickActions } from '@/components/features/QuickActions';
 
 export function ProductivityPage() {
   return (

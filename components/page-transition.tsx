@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PageTransitionProps {
@@ -12,7 +11,7 @@ const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,
-    scale: 0.98,
+    scale: 0.99,
   },
   in: {
     opacity: 1,
@@ -21,26 +20,18 @@ const pageVariants = {
   },
   out: {
     opacity: 0,
-    y: -20,
-    scale: 0.98,
+    y: -10,
+    scale: 0.99,
   },
 };
 
 const pageTransition = {
   type: 'tween' as const,
-  ease: 'anticipate' as const,
-  duration: 0.3,
+  ease: 'easeInOut' as const,
+  duration: 0.4,
 };
 
 export function PageTransition({ children, currentPage }: PageTransitionProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 100);
-    return () => clearTimeout(timer);
-  }, [currentPage]);
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -52,13 +43,7 @@ export function PageTransition({ children, currentPage }: PageTransitionProps) {
         transition={pageTransition}
         className="w-full"
       >
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF9F43]"></div>
-          </div>
-        ) : (
-          children
-        )}
+        {children}
       </motion.div>
     </AnimatePresence>
   );
