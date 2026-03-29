@@ -27,46 +27,9 @@ export function Dashboard() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(76,201,240,0.08)_0%,_transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(162,155,254,0.06)_0%,_transparent_50%)]" />
         
-        {/* Floating orbs with refined animation */}
-        <motion.div
-          animate={{
-            y: [0, -15, 0],
-            opacity: [0.08, 0.12, 0.08],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute top-20 left-[10%] w-64 h-64 bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] rounded-full blur-[100px]"
-        />
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-            opacity: [0.06, 0.1, 0.06],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 1,
-          }}
-          className="absolute bottom-20 right-[15%] w-80 h-80 bg-gradient-to-br from-[#a29bfe] to-[#4cc9f0] rounded-full blur-[120px]"
-        />
-        <motion.div
-          animate={{
-            y: [0, -10, 0],
-            x: [0, 10, 0],
-            opacity: [0.05, 0.08, 0.05],
-          }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 2,
-          }}
-          className="absolute top-1/2 left-1/3 w-48 h-48 bg-gradient-to-br from-[#10b981] to-[#4cc9f0] rounded-full blur-[80px]"
-        />
+        {/* Subtle static ambient glows - reduced animation for less visual noise */}
+        <div className="absolute top-20 left-[10%] w-64 h-64 bg-gradient-to-br from-[#4cc9f0] to-[#a29bfe] rounded-full blur-[120px] opacity-[0.06]" />
+        <div className="absolute bottom-20 right-[15%] w-80 h-80 bg-gradient-to-br from-[#a29bfe] to-[#4cc9f0] rounded-full blur-[140px] opacity-[0.04]" />
         
         {/* Subtle noise texture overlay */}
         <div className="absolute inset-0 opacity-[0.015]" style={{

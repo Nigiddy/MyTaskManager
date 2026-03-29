@@ -225,11 +225,11 @@
   }
 
   .mobile-text {
-    @apply text-sm leading-relaxed font-open-sans;
+    @apply text-sm leading-relaxed;
   }
 
   .mobile-heading {
-    @apply text-xl font-bold mb-2 font-poppins;
+    @apply text-xl font-bold mb-2 font-display;
   }
 
   .mobile-card {
@@ -237,7 +237,7 @@
   }
 
   .mobile-button {
-    @apply p-3 rounded-xl font-medium transition-all duration-200 active:scale-95 touch-manipulation font-poppins;
+    @apply p-3 rounded-xl font-medium transition-all duration-200 active:scale-95 touch-manipulation;
   }
 
   .mobile-button-primary {

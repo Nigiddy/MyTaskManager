@@ -14,9 +14,9 @@ type StatPillProps = {
 function StatPill({ icon: Icon, label, value, color, index }: StatPillProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, delay: index * 0.05 }}
       whileHover={{ scale: 1.02 }}
       className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:border-white/10 transition-all duration-300 cursor-pointer"
     >
@@ -28,7 +28,7 @@ function StatPill({ icon: Icon, label, value, color, index }: StatPillProps) {
       </div>
       <div className="flex items-baseline gap-1.5">
         <span className="text-sm font-semibold text-white">{value}</span>
-        <span className="text-xs text-white/40">{label}</span>
+        <span className="text-xs text-white/60">{label}</span>
       </div>
     </motion.div>
   );
