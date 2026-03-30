@@ -49,7 +49,7 @@ export function Dashboard() {
             setSidebarOpen={setSidebarOpen}
           />
 
-          <main className="flex-1 px-4 pb-8 lg:px-8 transition-all duration-300">
+          <main className="flex-1 px-4 pb-24 lg:pb-8 lg:px-8 transition-all duration-300">
             <PageIndicator currentPage={currentPage} />
             <PageTransition currentPage={currentPage}>
               <PageRouter currentPage={currentPage} />
