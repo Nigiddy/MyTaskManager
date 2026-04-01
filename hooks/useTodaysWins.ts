@@ -24,7 +24,7 @@ export function useTodaysWins() {
       }
     } catch {
       setWins([]);
-      setError('Failed to load today’s wins.');
+      setError('Failed to load today\u2019s wins.');
     } finally {
       setIsLoading(false);
     }
@@ -44,15 +44,23 @@ export function useTodaysWins() {
     }, 3000);
   };
 
+  /** Add a win with a hardcoded title (legacy helper). */
   const addNewWin = () => {
+    addWinWithTitle('New Achievement Unlocked!');
+  };
+
+  /** Add a win using the caller-supplied title. */
+  const addWinWithTitle = (title: string) => {
+    const trimmed = title.trim();
+    if (!trimmed) return;
     const newWin: Win = {
       id: Date.now(),
-      title: 'New Achievement Unlocked!',
+      title: trimmed,
       description: "You've accomplished something amazing today",
       category: 'Personal',
       impact: 'High',
       timeSpent: '1 hour',
-      celebration: '🌟 New win added!',
+      celebration: '🌟 Win saved!',
     };
     setWins(prev => [newWin, ...prev]);
     celebrateWin(newWin.id);
@@ -77,6 +85,7 @@ export function useTodaysWins() {
     showConfetti,
     celebrateWin,
     addNewWin,
+    addWinWithTitle,
     highImpactWins,
     totalTimeSpent,
   };

@@ -11,15 +11,13 @@ import { CheckSquare, Plus, CalendarDays, BarChart3, RefreshCw } from 'lucide-re
 import { Button } from '@/components/ui/button';
 import { getTasks } from '@/lib/api/tasks';
 import { getProjects } from '@/lib/api/projects';
+import { useToast } from '@/hooks/use-toast';
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.05,
-    },
+    transition: { staggerChildren: 0.04, delayChildren: 0.05 },
   },
 };
 
@@ -28,14 +26,12 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.25,
-      ease: 'easeOut' as const,
-    },
+    transition: { duration: 0.25, ease: 'easeOut' as const },
   },
 };
 
 export function TasksPage() {
+  const { toast } = useToast();
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [statsError, setStatsError] = useState<string | null>(null);
   const [activeTasks, setActiveTasks] = useState(0);
@@ -60,20 +56,24 @@ export function TasksPage() {
         if (!cancelled) setIsLoadingStats(false);
       }
     })();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const statCards = useMemo(
     () => [
-      { label: 'Active Tasks', value: activeTasks, color: '#4cc9f0' },
-      { label: 'Completed', value: completedTasks, color: '#10b981' },
+      { label: 'Active Tasks',    value: activeTasks,    color: '#4cc9f0' },
+      { label: 'Completed',       value: completedTasks, color: '#10b981' },
       { label: 'Projects Active', value: activeProjects, color: '#8b5cf6' },
     ],
     [activeProjects, activeTasks, completedTasks]
   );
+
+  const quickActions = [
+    { label: 'Schedule Task', icon: CalendarDays, color: '#3b82f6' },
+    { label: 'View Progress',  icon: BarChart3,    color: '#8b5cf6' },
+    { label: 'Repeat Task',    icon: RefreshCw,    color: '#f97316' },
+    { label: 'Bulk Add',       icon: Plus,         color: '#10b981' },
+  ];
 
   return (
     <motion.div
@@ -82,7 +82,7 @@ export function TasksPage() {
       animate="visible"
       className="space-y-6"
     >
-      {/* Page Header with Prominent Add Task Button */}
+      {/* Page Header */}
       <motion.div
         variants={itemVariants}
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
@@ -91,19 +91,20 @@ export function TasksPage() {
           <div className="flex items-center gap-2 mb-2">
             <CheckSquare className="w-5 h-5 text-emerald-400" />
             <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-              Tasks & Projects
+              Tasks &amp; Projects
             </span>
           </div>
-          <h2 className="font-display text-2xl font-bold text-white mb-1">
-            Tasks & Projects
-          </h2>
-          <p className="text-sm text-white/60">
-            Manage your daily tasks and track project progress
-          </p>
+          <h2 className="font-display text-2xl font-bold text-white mb-1">Tasks &amp; Projects</h2>
+          <p className="text-sm text-white/60">Manage your daily tasks and track project progress</p>
         </div>
-        
-        {/* Prominent Add Task Button */}
+
         <Button
+          onClick={() =>
+            toast({
+              title: 'Add Task',
+              description: 'A full task creation form is coming soon. For now, use the Daily Power Routine list below.',
+            })
+          }
           className="group flex items-center gap-2 px-5 py-2.5 h-auto bg-gradient-to-r from-[#4cc9f0] to-[#10b981] hover:from-[#4cc9f0]/90 hover:to-[#10b981]/90 text-white font-semibold rounded-xl shadow-lg shadow-[#4cc9f0]/20 hover:shadow-[#4cc9f0]/30 transition-all duration-300"
         >
           <Plus className="w-5 h-5 transition-transform group-hover:rotate-90 duration-300" />
@@ -130,16 +131,17 @@ export function TasksPage() {
       <motion.div variants={itemVariants} className="glass-card p-5">
         <h3 className="font-display font-semibold text-white mb-4">Quick Actions</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { label: 'Schedule Task', icon: CalendarDays, color: '#3b82f6' },
-            { label: 'View Progress', icon: BarChart3, color: '#8b5cf6' },
-            { label: 'Repeat Task', icon: RefreshCw, color: '#f97316' },
-            { label: 'Bulk Add', icon: Plus, color: '#10b981' },
-          ].map((action) => (
+          {quickActions.map((action) => (
             <motion.button
               key={action.label}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
+              onClick={() =>
+                toast({
+                  title: action.label,
+                  description: `${action.label} functionality is coming soon.`,
+                })
+              }
               className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/15 text-white/70 hover:text-white text-sm font-medium transition-all duration-200"
             >
               <action.icon className="w-4 h-4" style={{ color: action.color }} />
@@ -152,14 +154,18 @@ export function TasksPage() {
       {/* Task Statistics */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {isLoadingStats && (
-          <div className="glass-card p-5 text-center">
-            <div className="h-8 w-16 bg-white/10 rounded mx-auto mb-2" />
-            <div className="h-4 w-24 bg-white/10 rounded mx-auto" />
-          </div>
+          <>
+            {[0, 1, 2].map(i => (
+              <div key={i} className="glass-card p-5 text-center animate-pulse">
+                <div className="h-8 w-16 bg-white/10 rounded mx-auto mb-2" />
+                <div className="h-4 w-24 bg-white/10 rounded mx-auto" />
+              </div>
+            ))}
+          </>
         )}
 
         {!isLoadingStats && statsError && (
-          <div className="glass-card p-5 text-center text-sm text-red-200 border border-red-500/20 bg-red-500/5">
+          <div className="glass-card p-5 text-center text-sm text-red-200 border border-red-500/20 bg-red-500/5 md:col-span-3">
             {statsError}
           </div>
         )}
@@ -172,10 +178,7 @@ export function TasksPage() {
             transition={{ delay: 0.2 + index * 0.05, duration: 0.25, ease: 'easeOut' as const }}
             className="glass-card p-5 text-center"
           >
-            <div
-              className="font-display text-3xl font-bold mb-1"
-              style={{ color: stat.color }}
-            >
+            <div className="font-display text-3xl font-bold mb-1" style={{ color: stat.color }}>
               {stat.value}
             </div>
             <div className="text-sm text-white/60">{stat.label}</div>

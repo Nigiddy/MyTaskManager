@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
 
 const user = {
   name: 'Gideon Papa',
@@ -29,6 +30,8 @@ const user = {
 };
 
 export function UserProfile() {
+  const { toast } = useToast();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -78,23 +81,42 @@ export function UserProfile() {
             <p className="text-xs text-white/50">{user.role}</p>
           </div>
         </DropdownMenuLabel>
-        
+
         <DropdownMenuSeparator className="my-1 bg-white/[0.08]" />
-        
+
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors">
+          <DropdownMenuItem
+            className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors"
+            onSelect={() =>
+              toast({ title: 'Profile', description: 'Profile settings coming soon.' })
+            }
+          >
             <User className="mr-2.5 h-4 w-4 text-white/50" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors">
+          <DropdownMenuItem
+            className="cursor-pointer rounded-lg p-2.5 text-white/70 focus:bg-white/[0.06] focus:text-white transition-colors"
+            onSelect={() =>
+              toast({ title: 'Settings', description: 'App settings coming soon.' })
+            }
+          >
             <Settings className="mr-2.5 h-4 w-4 text-white/50" />
             <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        
+
         <DropdownMenuSeparator className="my-1 bg-white/[0.08]" />
 
-        <DropdownMenuItem className="cursor-pointer rounded-lg p-2.5 text-red-400 focus:bg-red-500/10 focus:text-red-300 transition-colors">
+        <DropdownMenuItem
+          className="cursor-pointer rounded-lg p-2.5 text-red-400 focus:bg-red-500/10 focus:text-red-300 transition-colors"
+          onSelect={() =>
+            toast({
+              title: 'Sign Out',
+              description: 'Authentication is not yet connected.',
+              variant: 'destructive',
+            })
+          }
+        >
           <LogOut className="mr-2.5 h-4 w-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>

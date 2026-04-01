@@ -88,7 +88,7 @@ export function PerformanceAnalytics() {
         <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">Today</Badge>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {[
           { icon: Target, color: 'text-blue-600', label: 'Avg Focus Score', value: `${avgFocus}%` },
           { icon: Activity, color: 'text-green-600', label: 'Tasks Complete', value: totalTasks },

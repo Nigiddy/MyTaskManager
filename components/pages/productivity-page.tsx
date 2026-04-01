@@ -7,6 +7,9 @@ import { MicroWins } from '@/components/features/MicroWins';
 import { QuickActions } from '@/components/features/QuickActions';
 import { getStats } from '@/lib/api/analytics';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { useHabits } from '@/hooks/useHabits';
+import { usePomodoroTimer } from '@/hooks/usePomodoroTimer';
 
 const StatCard = ({
   label,
@@ -25,8 +28,15 @@ const StatCard = ({
 );
 
 export function ProductivityPage() {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Real data from hooks
+  const { completedPomodoros, formatTime, timeLeft, timerState } = usePomodoroTimer();
+  const { completedToday: habitsCompleted, habits } = useHabits();
+
+  const deepWorkMins = completedPomodoros * 25;
 
   useEffect(() => {
     let cancelled = false;
@@ -42,9 +52,7 @@ export function ProductivityPage() {
         if (!cancelled) setIsLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -57,7 +65,7 @@ export function ProductivityPage() {
         </p>
       </header>
 
-      {/* 2. Today's insights */}
+      {/* 2. Today's insights — real data from hooks */}
       <section>
         <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
           Today's Insights
@@ -66,10 +74,23 @@ export function ProductivityPage() {
           className="grid gap-4"
           style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}
         >
-          <StatCard label="Focus Sessions" value={isLoading ? '—' : 0} error={error} />
-          <StatCard label="Deep Work" value={isLoading ? '—' : '0h 0m'} />
-          <StatCard label="Focus Score" value={isLoading ? '—' : '0%'} />
-          <StatCard label="Habits Done" value={isLoading ? '—' : '0/0'} />
+          <StatCard
+            label="Focus Sessions"
+            value={isLoading ? '—' : completedPomodoros}
+            error={error}
+          />
+          <StatCard
+            label="Deep Work"
+            value={isLoading ? '—' : `${Math.floor(deepWorkMins / 60)}h ${deepWorkMins % 60}m`}
+          />
+          <StatCard
+            label="Focus Score"
+            value={isLoading ? '—' : (completedPomodoros > 0 ? `${Math.min(100, completedPomodoros * 25)}%` : '0%')}
+          />
+          <StatCard
+            label="Habits Done"
+            value={isLoading ? '—' : `${habitsCompleted}/${habits.length}`}
+          />
         </div>
       </section>
 
@@ -84,25 +105,49 @@ export function ProductivityPage() {
         >
           <Button
             variant="outline"
-            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '⏰ Pomodoro',
+                description: 'Use the Pomodoro Timer below to start your first session.',
+              })
+            }
           >
             Start Pomodoro
           </Button>
           <Button
             variant="outline"
-            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '🏆 Log Win',
+                description: 'Head to the Life & Wellness page to log a micro-win.',
+              })
+            }
           >
             Log Win
           </Button>
           <Button
             variant="outline"
-            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '✅ Habits',
+                description: 'Use the Habit Streaks section below to mark habits done.',
+              })
+            }
           >
             Check Habits
           </Button>
           <Button
             variant="outline"
-            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '📊 Stats',
+                description: 'Visit the Analytics page for full productivity stats.',
+              })
+            }
           >
             View Stats
           </Button>

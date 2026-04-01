@@ -34,7 +34,7 @@ function HabitCard({ habit, onToggle }: { habit: Habit; onToggle: () => void }) 
         </div>
         <Button
           variant={habit.completedToday ? 'outline' : 'default'} size="sm"
-          className={`h-8 px-3 text-xs ${habit.completedToday ? 'border-green-300 text-green-700 hover:bg-green-50' : 'bg-[#FF9F43] hover:bg-[#FF8F33] text-white'}`}
+          className={`h-11 px-4 text-xs ${habit.completedToday ? 'border-green-300 text-green-700 hover:bg-green-50' : 'bg-[#FF9F43] hover:bg-[#FF8F33] text-white'}`}
           onClick={onToggle}>{habit.completedToday ? '✓ Done' : 'Mark Done'}
         </Button>
       </div>

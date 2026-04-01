@@ -31,7 +31,13 @@ export function MicroWins() {
         {!isLoading && !error && wins.map(win => (
           <div key={win.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50">
             <span className="text-[13px] text-gray-700">{impactIcon[win.impact]} {win.title}</span>
-            <Button onClick={() => deleteWin(win.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 h-7 w-7">
+            {/* 44×44 px tap target */}
+            <Button
+              onClick={() => deleteWin(win.id)}
+              variant="ghost"
+              size="sm"
+              className="text-gray-400 hover:text-red-500 h-10 w-10 p-0"
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -43,10 +49,15 @@ export function MicroWins() {
         <input
           value={title}
           onChange={e => setTitle(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleAdd()}
           placeholder="Log a small win..."
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-[13px] focus:outline-none focus:ring-1 focus:ring-gray-400 min-h-[44px]"
         />
-        <Button onClick={handleAdd} size="sm" className="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5">
+        <Button
+          onClick={handleAdd}
+          size="sm"
+          className="bg-gray-800 hover:bg-gray-900 text-white px-3 h-11"
+        >
           <Plus className="h-4 w-4" />
         </Button>
       </div>

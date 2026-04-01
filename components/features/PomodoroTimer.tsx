@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { usePomodoroTimer } from '@/hooks/usePomodoroTimer';
+import { useToast } from '@/hooks/use-toast';
 import type { TimerMode } from '@/types';
 
 const modeConfig: Record<TimerMode, { color: string; label: string; Icon: React.ElementType }> = {
@@ -24,6 +25,7 @@ export function PomodoroTimer() {
     isFocusMode, setIsFocusMode, startTimer, pauseTimer, resetTimer,
     progressPercentage, formatTime,
   } = usePomodoroTimer();
+  const { toast } = useToast();
 
   const { color, label, Icon } = modeConfig[currentMode];
 
@@ -87,7 +89,8 @@ export function PomodoroTimer() {
       <div className="mt-4 p-3 bg-[#FFE8D6] rounded-lg">
         <div className="flex items-center justify-between text-sm">
           <span className="text-[#666]">Timer Settings</span>
-          <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-[#FF9F43]">
+          <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-[#FF9F43]"
+            onClick={() => toast({ title: 'Timer customization coming soon', description: 'You’ll be able to adjust work and break durations in a future update.' })}>
             <Settings size={14} className="mr-1" />Customize
           </Button>
         </div>

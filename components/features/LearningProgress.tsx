@@ -23,8 +23,8 @@ export function LearningProgress() {
   const [activeTab, setActiveTab] = useState<'skills' | 'projects' | 'resources'>('skills');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [skills] = useState<Skill[]>([]);
-  const [resources] = useState<LearningResource[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [resources, setResources] = useState<LearningResource[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export function LearningProgress() {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {[
           { label: 'Skills Tracked', value: skills.length },
           { label: 'Active Projects', value: projects.filter(p => p.status === 'In Progress').length },

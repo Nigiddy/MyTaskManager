@@ -9,6 +9,7 @@ import { Plus, Mic, Play, Pause, CheckCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useQuickActions } from '@/hooks/useQuickActions';
+import { useToast } from '@/hooks/use-toast';
 import type { QuickAction } from '@/types';
 
 const quickActions: QuickAction[] = [
@@ -29,12 +30,14 @@ const categoryColor: Record<string, string> = {
 
 export function QuickActions() {
   const { isRecording, voiceNotes, showVoiceInput, currentActionName, triggerAction, startRecording, stopRecording, completeVoiceNote, deleteVoiceNote } = useQuickActions();
+  const { toast } = useToast();
 
   return (
     <div className="bg-[#FFF8F3] rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-lg">QUICK ACTIONS</h2>
-        <Button variant="ghost" size="sm" className="text-xs text-[#666] hover:text-[#333]">
+        <Button variant="ghost" size="sm" className="text-xs text-[#666] hover:text-[#333]"
+          onClick={() => toast({ title: 'Customize coming soon', description: 'You’ll be able to reorder and configure quick actions in a future update.' })}>
           <Plus size={16} className="mr-1" />Customize
         </Button>
       </div>
@@ -93,11 +96,11 @@ export function QuickActions() {
                 </div>
                 <div className="flex items-center space-x-1 ml-2">
                   {!note.completed && (
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-green-600 hover:bg-green-50" onClick={() => completeVoiceNote(note.id)}>
+                    <Button variant="ghost" size="sm" className="h-9 w-9 p-0 text-green-600 hover:bg-green-50" onClick={() => completeVoiceNote(note.id)}>
                       <CheckCircle size={14} />
                     </Button>
                   )}
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-600 hover:bg-red-50" onClick={() => deleteVoiceNote(note.id)}>
+                  <Button variant="ghost" size="sm" className="h-9 w-9 p-0 text-red-600 hover:bg-red-50" onClick={() => deleteVoiceNote(note.id)}>
                     <X size={14} />
                   </Button>
                 </div>
