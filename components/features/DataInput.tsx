@@ -5,7 +5,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Database, Plus, Save, Edit, Trash2, Target, Calendar, BarChart3, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,14 +76,24 @@ function FieldInput({ field, value, onChange }: { field: DataField; value: unkno
   );
 }
 
-export function DataInput() {
-  const [selectedSectionId, setSelectedSectionId] = useState('coding-sessions');
+export function DataInput({ initialSectionId }: { initialSectionId?: string } = {}) {
+  const [selectedSectionId, setSelectedSectionId] = useState(initialSectionId ?? 'coding-sessions');
+
+  // Sync if parent changes the active section (e.g. Quick Log buttons)
+  useEffect(() => {
+    if (initialSectionId) setSelectedSectionId(initialSectionId);
+  }, [initialSectionId]);
+
   const currentSection = dataSections.find(s => s.id === selectedSectionId);
   const { entries, formData, isEditing, handleInputChange, handleSubmit, handleEdit, handleDelete, cancelEdit } = useDataInput(currentSection);
   const sectionEntries = entries.filter(e => e.sectionId === selectedSectionId);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const onSubmit = () => {
-    if (!handleSubmit(selectedSectionId)) alert('Please fill in all required fields');
+    setValidationError(null);
+    if (!handleSubmit(selectedSectionId)) {
+      setValidationError('Please fill in all required fields before saving.');
+    }
   };
 
   return (
@@ -124,14 +134,21 @@ export function DataInput() {
               </div>
             ))}
           </div>
-          <div className="flex space-x-2 mt-4">
-            <Button onClick={onSubmit} size="sm" className="bg-[#FF9F43] hover:bg-[#FF8A3C] text-white text-xs">
-              {isEditing !== null ? <Edit size={14} className="mr-1" /> : <Plus size={14} className="mr-1" />}
-              {isEditing !== null ? 'Update Entry' : 'Add Entry'}
-            </Button>
-            {isEditing !== null && (
-              <Button onClick={cancelEdit} variant="outline" size="sm" className="border-[#FFE8D6] text-[#666] hover:bg-[#FFE8D6] text-xs">Cancel</Button>
+          <div className="flex flex-col gap-2 mt-4">
+            {validationError && (
+              <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+                {validationError}
+              </p>
             )}
+            <div className="flex space-x-2">
+              <Button onClick={onSubmit} size="sm" className="bg-[#FF9F43] hover:bg-[#FF8A3C] text-white text-xs">
+                {isEditing !== null ? <Edit size={14} className="mr-1" /> : <Plus size={14} className="mr-1" />}
+                {isEditing !== null ? 'Update Entry' : 'Add Entry'}
+              </Button>
+              {isEditing !== null && (
+                <Button onClick={cancelEdit} variant="outline" size="sm" className="border-[#FFE8D6] text-[#666] hover:bg-[#FFE8D6] text-xs">Cancel</Button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -154,8 +171,9 @@ export function DataInput() {
                 <div className="text-xs text-[#666] mt-2">{entry.updatedAt.toLocaleDateString()} at {entry.updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
               </div>
               <div className="flex space-x-1 ml-2">
-                <button onClick={() => handleEdit(entry)} className="p-1 text-gray-400 hover:text-blue-500 transition-colors"><Edit size={14} /></button>
-                <button onClick={() => handleDelete(entry.id)} className="p-1 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                {/* p-2.5 gives ~40px effective tap area on each axis */}
+                <button onClick={() => handleEdit(entry)} className="p-2.5 text-gray-400 hover:text-blue-500 transition-colors rounded-lg hover:bg-blue-50"><Edit size={14} /></button>
+                <button onClick={() => handleDelete(entry.id)} className="p-2.5 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"><Trash2 size={14} /></button>
               </div>
             </div>
           </div>

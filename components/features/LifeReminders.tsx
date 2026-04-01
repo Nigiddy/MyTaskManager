@@ -23,7 +23,7 @@ export function LifeReminders() {
       {/* Reminder Items */}
       {isLoading && <p className="text-[12px] text-gray-400">Loading...</p>}
       {error && <p className="text-[12px] text-red-500">{error}</p>}
-      
+
       {!isLoading && !error && reminders.length === 0 && (
         <p className="text-[12px] text-gray-400 text-center py-4">No reminders yet. Add one below!</p>
       )}
@@ -38,7 +38,13 @@ export function LifeReminders() {
                 Added {r.createdAt.toLocaleDateString()}
               </div>
             </div>
-            <Button onClick={() => removeReminder(r.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 h-7 w-7">
+            <Button
+              onClick={() => removeReminder(r.id)}
+              variant="ghost"
+              size="sm"
+              // 44×44 px tap target
+              className="text-gray-400 hover:text-red-500 h-10 w-10 p-0"
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -50,10 +56,15 @@ export function LifeReminders() {
         <input
           value={text}
           onChange={e => setText(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleAdd()}
           placeholder="Add a new reminder..."
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 text-[13px] focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-[13px] focus:outline-none focus:ring-1 focus:ring-gray-400 min-h-[44px]"
         />
-        <Button onClick={handleAdd} size="sm" className="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5">
+        <Button
+          onClick={handleAdd}
+          size="sm"
+          className="bg-gray-800 hover:bg-gray-900 text-white px-3 h-11"
+        >
           <Plus className="h-4 w-4" />
         </Button>
       </div>

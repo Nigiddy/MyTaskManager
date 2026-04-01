@@ -6,10 +6,37 @@ import { HabitStreaks } from '@/components/features/HabitStreaks';
 import { MicroWins } from '@/components/features/MicroWins';
 import { QuickActions } from '@/components/features/QuickActions';
 import { getStats } from '@/lib/api/analytics';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { useHabits } from '@/hooks/useHabits';
+import { usePomodoroTimer } from '@/hooks/usePomodoroTimer';
+
+const StatCard = ({
+  label,
+  value,
+  error,
+}: {
+  label: string;
+  value: string | number;
+  error?: string | null;
+}) => (
+  <div className="bg-gray-50 rounded-lg p-4">
+    <p className="text-2xl font-medium text-gray-900">{value}</p>
+    <p className="text-xs text-gray-400">{label}</p>
+    {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+  </div>
+);
 
 export function ProductivityPage() {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Real data from hooks
+  const { completedPomodoros, formatTime, timeLeft, timerState } = usePomodoroTimer();
+  const { completedToday: habitsCompleted, habits } = useHabits();
+
+  const deepWorkMins = completedPomodoros * 25;
 
   useEffect(() => {
     let cancelled = false;
@@ -20,103 +47,166 @@ export function ProductivityPage() {
         await getStats();
       } catch {
         if (cancelled) return;
-        setError('Failed to load productivity insights.');
+        setError('Failed to load insights');
       } finally {
         if (!cancelled) setIsLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   return (
-    <div className="space-y-4">
-      {/* Page Header */}
-      <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-purple-800 mb-2">
-            Productivity Tools
+    <div className="max-w-[900px] mx-auto px-4 py-8 space-y-12">
+      {/* 1. Page Header */}
+      <header className="text-center">
+        <h1 className="text-2xl font-bold text-gray-800">Productivity</h1>
+        <p className="text-[13px] text-gray-400 mt-1">
+          Focus, build habits, and track your daily wins.
+        </p>
+      </header>
+
+      {/* 2. Today's insights — real data from hooks */}
+      <section>
+        <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+          Today's Insights
+        </h2>
+        <div
+          className="grid gap-4"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}
+        >
+          <StatCard
+            label="Focus Sessions"
+            value={isLoading ? '—' : completedPomodoros}
+            error={error}
+          />
+          <StatCard
+            label="Deep Work"
+            value={isLoading ? '—' : `${Math.floor(deepWorkMins / 60)}h ${deepWorkMins % 60}m`}
+          />
+          <StatCard
+            label="Focus Score"
+            value={isLoading ? '—' : (completedPomodoros > 0 ? `${Math.min(100, completedPomodoros * 25)}%` : '0%')}
+          />
+          <StatCard
+            label="Habits Done"
+            value={isLoading ? '—' : `${habitsCompleted}/${habits.length}`}
+          />
+        </div>
+      </section>
+
+      {/* 3. Quick start */}
+      <section>
+        <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+          Quick Start
+        </h2>
+        <div
+          className="grid gap-3"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}
+        >
+          <Button
+            variant="outline"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '⏰ Pomodoro',
+                description: 'Use the Pomodoro Timer below to start your first session.',
+              })
+            }
+          >
+            Start Pomodoro
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '🏆 Log Win',
+                description: 'Head to the Life & Wellness page to log a micro-win.',
+              })
+            }
+          >
+            Log Win
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '✅ Habits',
+                description: 'Use the Habit Streaks section below to mark habits done.',
+              })
+            }
+          >
+            Check Habits
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-white border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors h-11"
+            onClick={() =>
+              toast({
+                title: '📊 Stats',
+                description: 'Visit the Analytics page for full productivity stats.',
+              })
+            }
+          >
+            View Stats
+          </Button>
+        </div>
+      </section>
+
+      {/* 4. Main tools */}
+      <div
+        className="grid gap-8"
+        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
+      >
+        <section>
+          <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+            Pomodoro Timer
           </h2>
-          <p className="text-sm text-purple-600">
-            Focus, build habits, and track your daily wins
-          </p>
+          <PomodoroTimer />
+        </section>
+        <section>
+          <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+            Habit Streaks
+          </h2>
+          <HabitStreaks />
+        </section>
+      </div>
+
+      {/* 5. Micro wins + Quick actions */}
+      <div
+        className="grid gap-8"
+        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
+      >
+        <section>
+          <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+            Micro Wins
+          </h2>
+          <MicroWins />
+        </section>
+        <section>
+          <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+            Quick Actions
+          </h2>
+          <QuickActions />
+        </section>
+      </div>
+
+      {/* 6. Productivity tips */}
+      <section>
+        <h2 className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-3">
+          Productivity Tips
+        </h2>
+        <div
+          className="grid gap-x-8 gap-y-2 text-[13px] text-gray-500"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
+        >
+          <p>– Use Pomodoro technique for focused work sessions</p>
+          <p>– Track micro-wins to build momentum</p>
+          <p>– Maintain habit streaks for consistency</p>
+          <p>– Take regular breaks to maintain focus</p>
         </div>
-      </div>
-
-      {/* Main Productivity Tools */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <PomodoroTimer />
-        <HabitStreaks />
-      </div>
-
-      {/* Micro-Wins and Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <MicroWins />
-        <QuickActions />
-      </div>
-
-      {/* Productivity Insights */}
-      <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
-        <h3 className="font-semibold text-[#333] mb-3">
-          Today's Productivity Insights
-        </h3>
-        {error && (
-          <div className="p-2 mb-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
-            {error}
-          </div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{isLoading ? '—' : 0}</div>
-            <div className="text-xs text-[#666]">Focus Sessions</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{isLoading ? '—' : '0h 0m'}</div>
-            <div className="text-xs text-[#666]">Deep Work</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{isLoading ? '—' : '0%'}</div>
-            <div className="text-xs text-[#666]">Focus Score</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">{isLoading ? '—' : '0/0'}</div>
-            <div className="text-xs text-[#666]">Habits Done</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Productivity Tips */}
-      <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-        <h3 className="font-semibold text-blue-800 mb-3">
-          💡 Productivity Tips
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-blue-700">
-          <div>• Use Pomodoro technique for focused work sessions</div>
-          <div>• Track micro-wins to build momentum</div>
-          <div>• Maintain habit streaks for consistency</div>
-          <div>• Take regular breaks to maintain focus</div>
-        </div>
-      </div>
-
-      {/* Quick Start Actions */}
-      <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
-        <h3 className="font-semibold text-[#333] mb-3">Quick Start</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <button className="p-3 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 text-red-700 text-sm font-medium transition-colors">
-            🍅 Start Pomodoro
-          </button>
-          <button className="p-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-green-700 text-sm font-medium transition-colors">
-            ✅ Log Win
-          </button>
-          <button className="p-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 text-blue-700 text-sm font-medium transition-colors">
-            🔥 Check Habits
-          </button>
-          <button className="p-3 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 text-purple-700 text-sm font-medium transition-colors">
-            📊 View Stats
-          </button>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

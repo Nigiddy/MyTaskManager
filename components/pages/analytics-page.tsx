@@ -6,8 +6,10 @@ import { BusinessIntelligence } from '@/components/business-intelligence';
 import { LearningProgress } from '@/components/features/LearningProgress';
 import { CaseTypeBreakdown } from '@/components/case-type-breakdown';
 import { getStats } from '@/lib/api/analytics';
+import { useToast } from '@/hooks/use-toast';
 
 export function AnalyticsPage() {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,22 +27,24 @@ export function AnalyticsPage() {
         if (!cancelled) setIsLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
+
+  const quickAnalyticsActions = [
+    { emoji: '📊', label: 'Export Data' },
+    { emoji: '📈', label: 'Trends' },
+    { emoji: '🎯', label: 'Goals' },
+    { emoji: '📅', label: 'Timeline' },
+  ];
 
   return (
     <div className="space-y-4">
       {/* Page Header */}
       <div className="p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-200">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-indigo-800 mb-2">
-            Analytics & Insights
-          </h2>
+          <h2 className="text-2xl font-bold text-indigo-800 mb-2">Analytics &amp; Insights</h2>
           <p className="text-sm text-indigo-600">
-            Track performance, monitor business metrics, and analyze your
-            progress
+            Track performance, monitor business metrics, and analyze your progress
           </p>
         </div>
       </div>
@@ -66,22 +70,20 @@ export function AnalyticsPage() {
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-xl font-bold text-blue-600">{isLoading ? '—' : '0%'}</div>
-            <div className="text-xs text-blue-600">Productivity</div>
-          </div>
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-xl font-bold text-green-600">{isLoading ? '—' : '0h'}</div>
-            <div className="text-xs text-green-600">Focus Time</div>
-          </div>
-          <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-xl font-bold text-purple-600">{isLoading ? '—' : 0}</div>
-            <div className="text-xs text-purple-600">Tasks Done</div>
-          </div>
-          <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-xl font-bold text-orange-600">{isLoading ? '—' : '0/0'}</div>
-            <div className="text-xs text-orange-600">Habits</div>
-          </div>
+          {[
+            { label: 'Productivity', value: isLoading ? '—' : '—', color: 'blue',   note: 'Once tasks are tracked' },
+            { label: 'Focus Time',   value: isLoading ? '—' : '—', color: 'green',  note: 'Once Pomodoros are logged' },
+            { label: 'Tasks Done',   value: isLoading ? '—' : '—', color: 'purple', note: 'Once tasks are completed' },
+            { label: 'Habits',       value: isLoading ? '—' : '—', color: 'orange', note: 'Once habits are tracked' },
+          ].map(stat => (
+            <div key={stat.label} className={`text-center p-3 bg-${stat.color}-50 rounded-lg`}>
+              <div className={`text-xl font-bold text-${stat.color}-600`}>{stat.value}</div>
+              <div className={`text-xs text-${stat.color}-600`}>{stat.label}</div>
+              {!isLoading && (
+                <div className={`text-[10px] text-${stat.color}-400 mt-1`}>{stat.note}</div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -100,18 +102,21 @@ export function AnalyticsPage() {
       <div className="p-4 bg-white rounded-lg border border-[#FFE8D6] shadow-sm">
         <h3 className="font-semibold text-[#333] mb-3">Quick Analytics</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <button className="p-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 text-blue-700 text-sm font-medium transition-colors">
-            📊 Export Data
-          </button>
-          <button className="p-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-green-700 text-sm font-medium transition-colors">
-            📈 Trends
-          </button>
-          <button className="p-3 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 text-purple-700 text-sm font-medium transition-colors">
-            🎯 Goals
-          </button>
-          <button className="p-3 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 text-orange-700 text-sm font-medium transition-colors">
-            📅 Timeline
-          </button>
+          {quickAnalyticsActions.map(({ emoji, label }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() =>
+                toast({
+                  title: `${emoji} ${label}`,
+                  description: `${label} functionality is coming soon.`,
+                })
+              }
+              className="p-3 min-h-[44px] bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 text-blue-700 text-sm font-medium transition-colors"
+            >
+              {emoji} {label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

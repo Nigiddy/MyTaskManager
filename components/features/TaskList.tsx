@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronRight, ListTodo } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTasks } from '@/hooks/useTasks';
+import { useToast } from '@/hooks/use-toast';
 import type { Task, Priority } from '@/types';
 
 function getCategoryStyles(category: string) {
@@ -98,6 +99,7 @@ function TaskRow({ task, index, onToggle }: { task: Task; index: number; onToggl
 
 export function TaskList() {
   const { tasks, isLoading, error, toggleComplete, completedCount, completionPercent } = useTasks();
+  const { toast } = useToast();
 
   return (
     <motion.div initial={{ opacity: 0, y: 16, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -107,7 +109,11 @@ export function TaskList() {
           <ListTodo className="w-5 h-5 text-[#4cc9f0]" />
           <h2 className="font-display font-semibold text-lg text-white">Your Daily Power Routine</h2>
         </div>
-        <Button variant="ghost" size="sm" className="text-xs text-white/60 hover:text-white hover:bg-white/10">
+        <Button
+          variant="ghost" size="sm"
+          className="text-xs text-white/60 hover:text-white hover:bg-white/10"
+          onClick={() => toast({ title: 'Full task list coming soon', description: 'A dedicated task view will be added in a future update.' })}
+        >
           View All <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
